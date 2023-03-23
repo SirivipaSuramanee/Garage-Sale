@@ -11,7 +11,7 @@ import { Stack } from "@mui/system";
 export default function Nav() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar color="primary"position="static">
+      <AppBar color="primary"position="sticky">
         <Toolbar>
           <IconButton
             size="large"

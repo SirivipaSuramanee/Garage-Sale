@@ -33,30 +33,30 @@ export default function POST() {
       img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
       title: "Honey",
     },
-    {
-      img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
-      title: "Basketball",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
-      title: "Fern",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
-      title: "Mushrooms",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
-      title: "Tomato basil",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1",
-      title: "Sea star",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
-      title: "Bike",
-    },
+    // {
+    //   img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
+    //   title: "Basketball",
+    // },
+    // {
+    //   img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
+    //   title: "Fern",
+    // },
+    // {
+    //   img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
+    //   title: "Mushrooms",
+    // },
+    // {
+    //   img: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
+    //   title: "Tomato basil",
+    // },
+    // {
+    //   img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1",
+    //   title: "Sea star",
+    // },
+    // {
+    //   img: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
+    //   title: "Bike",
+    // },
   ];
   return (
     <>
@@ -66,9 +66,10 @@ export default function POST() {
           marginLeft: 1,
           marginRight: 1,
           height: 500,
-          backgroundColor: "primary.dark",
-          "&:hover": {
-            backgroundColor: "primary.main",
+          // backgroundColor: "#B0CFDE",
+          "&:hover": 
+          {
+            backgroundColor: "#C9DFEC",
             opacity: [0.9, 0.8, 0.7],
           },
         }}
@@ -79,16 +80,16 @@ export default function POST() {
           justifyContent="space-between"
          
         >
-          <h1>หัวข้อ</h1>
+          <h2>หัวข้อ</h2>
           <Stack 
-           sx={{ padding: 1 }}
+           sx={{ padding: 1 }}       
            spacing={1}
           direction="row"
             alignItems="flex-start"
           >
            
-             <h5 >fah007</h5>
-            <Avatar>H</Avatar>
+             <h5 >FAH007</h5>
+            <Avatar>A</Avatar>
           </Stack>
         </Stack>
 
@@ -103,7 +104,7 @@ export default function POST() {
                 <img
                   src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
                   srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                  alt={item.title}
+                  // alt={item.title}
                   loading="lazy"
                 />
               </ImageListItem>
@@ -117,8 +118,7 @@ export default function POST() {
               ever since the 1500s, when an unknown printer took a galley of
               type and scrambled it to make a type specimen book. It has
               survived not only five centuries, but also the leap into
-           
-             
+
             </p>
           </div>
         </Stack>
@@ -129,10 +129,10 @@ export default function POST() {
           sx={{ padding: 2 }}
           spacing={2}
         >
-         <Button variant="contained" onClick={()=> {
+         <Button variant="contained" color="info" onClick={()=> {
             
             setlike(like+1)
-         }}>{like}👍</Button>
+         }}>{like}❤️</Button>
           <h5>โลเคชั่น</h5>
         </Stack>
       </Box>

@@ -14,7 +14,11 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import { red } from '@mui/material/colors';
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Link as RouterLink } from "react-router-dom";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -28,7 +32,7 @@ function RegisterCreate() {
   const [success, setSuccess] = useState(false); //จะยังไม่ให้แสดงบันทึกข้อมูล
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const color = red[500];
+
   const handleInputChange = (
     event: React.ChangeEvent<{ id?: string; value: any }> //ชื่อคอมลัมน์คือ id และค่าที่จะเอามาใส่ไว้ในคอมลัมน์นั้นคือ value
   ) => {
@@ -100,9 +104,11 @@ function RegisterCreate() {
           setErrorMessage(res.error);
         }
       });
+      
   }
   return (
     <>
+      
       <CssBaseline />
       <Container maxWidth="md">
         <Snackbar
@@ -150,99 +156,99 @@ function RegisterCreate() {
                 textAlign: "center",
               }}
             >
-              <Typography  variant="h4" color="#1976d2">
+              <Typography variant="h4" color="#1976d2">
                 Register
               </Typography>
             </Box>
             <Divider />
-            <Grid container spacing={4} >
+            <Grid container spacing={4}>
               <Grid item xs={6}>
                 {/* <FormControl fullWidth variant="outlined">
                   <p>Firstname</p> */}
-                  <TextField
-                    id="FirstName"
-                    variant="outlined"
-                    label="Firstname"
-                    type="string"
-                    size="medium"
-                    value={register.FirstName || ""}
-                    onChange={handleInputChange}
-                  />
+                <TextField
+                  id="FirstName"
+                  variant="outlined"
+                  label="Firstname"
+                  type="string"
+                  size="medium"
+                  value={register.FirstName || ""}
+                  onChange={handleInputChange}
+                />
                 {/* </FormControl> */}
               </Grid>
 
               <Grid item xs={6}>
                 {/* <FormControl fullWidth variant="standard">
                   <p>Lastname</p> */}
-                  <TextField
-                    id="LastName"
-                    variant="outlined"
-                    label="Lastname"
-                    type="string"
-                    size="medium"
-                    value={register.LastName || ""}
-                    onChange={handleInputChange}
-                  />
+                <TextField
+                  id="LastName"
+                  variant="outlined"
+                  label="Lastname"
+                  type="string"
+                  size="medium"
+                  value={register.LastName || ""}
+                  onChange={handleInputChange}
+                />
                 {/* </FormControl> */}
               </Grid>
 
               <Grid item xs={6}>
                 {/* <FormControl fullWidth variant="standard">
                   <p>Tel</p> */}
-                  <TextField
-                    id="Tel"
-                    variant="outlined"
-                    label="Tel"
-                    type="string"
-                    size="medium"
-                    value={register.Tel || ""}
-                    onChange={handleInputChange}
-                  />
+                <TextField
+                  id="Tel"
+                  variant="outlined"
+                  label="Tel"
+                  type="string"
+                  size="medium"
+                  value={register.Tel || ""}
+                  onChange={handleInputChange}
+                />
                 {/* </FormControl> */}
               </Grid>
 
               <Grid item xs={6}>
                 {/* <FormControl fullWidth variant="standard">
                   <p>Email</p> */}
-                  <TextField
-                    id="Email"
-                    variant="outlined"
-                    label="Email"
-                    type="string"
-                    size="medium"
-                    value={register.Email || ""}
-                    onChange={handleInputChange}
-                  />
+                <TextField
+                  id="Email"
+                  variant="outlined"
+                  label="Email"
+                  type="string"
+                  size="medium"
+                  value={register.Email || ""}
+                  onChange={handleInputChange}
+                />
                 {/* </FormControl> */}
               </Grid>
 
               <Grid item xs={6}>
                 {/* <FormControl fullWidth variant="standard">
                   <p>Username</p> */}
-                  <TextField
-                    id="UserName"
-                    variant="outlined"
-                    label="Username"
-                    type="string"
-                    size="medium"
-                    value={register.UserName || ""}
-                    onChange={handleInputChange}
-                  />
+                <TextField
+                  id="UserName"
+                  variant="outlined"
+                  label="Username"
+                  type="string"
+                  size="medium"
+                  value={register.UserName || ""}
+                  onChange={handleInputChange}
+                />
                 {/* </FormControl> */}
               </Grid>
 
               <Grid item xs={6}>
                 {/* <FormControl fullWidth variant="standard">
                   <p>Password</p> */}
-                  <TextField
-                    id="Password"
-                    variant="outlined"
-                    label="Password"
-                    type="string"
-                    size="medium"
-                    value={register.Password || ""}
-                    onChange={handleInputChange}
-                  />
+                <TextField
+                  id="Password"
+                  variant="outlined"
+                  label="Password"
+                  type="string"
+                  size="medium"
+                  value={register.Password || ""}
+                  onChange={handleInputChange}
+                />
                 {/* </FormControl> */}
               </Grid>
             </Grid>

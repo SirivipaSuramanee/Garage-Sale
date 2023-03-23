@@ -11,3 +11,11 @@ type User struct {
 	UserName  string `gorm:"uniqueIndex" json:"userName"`
 	Password  string `json:"password"`
 }
+type Post struct {
+	gorm.Model
+	Catetagory string `json:"catetagory"`
+	Tel        string `json:"tel"`
+	Email      string `gorm:"uniqueIndex" json:"email"`
+	UserName   string `gorm:"uniqueIndex" json:"userName"`
+	Password   string `json:"password"`
+}

@@ -9,8 +9,8 @@ export default function SimpleContainer() {
     <React.Fragment>
       <CssBaseline />
       <Container maxWidth="md">
-        <Box sx={{ bgcolor: "#cfe8fc", height: "100vh" ,padding: 1}}>
-          
+        <Box sx={{ bgcolor: "#E0FFFF", padding: 1}}>
+     
           <POST />
           <POST />
           <POST />
