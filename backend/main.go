@@ -18,7 +18,14 @@ func main() {
 	r.GET("/test", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "service up")
 	})
+	//--------------Login---------------
 	r.POST("/registerCreate", controller.Register)
 	r.POST("/login", controller.Login)
+
+	//------------category--------------
+	r.GET("/category", controller.GetAllCategory)
+
+	//-----------Post-----------------
+	r.POST("/postCreate", controller.CreatePost)
 	r.Run()
 }

@@ -140,6 +140,16 @@ function RegisterCreate() {
             padding: 13,
           }}
         >
+          <Box>  <Box
+          display="flex"
+          sx={{
+            marginTop: 2,
+          }}
+        >
+          <Box sx={{ paddingX: 2, paddingY: 1 }}>
+          </Box>
+        </Box></Box>
+        
           <img
             src="https://www.immihelp.com/assets/cms/yard-sale-garage-sale-shopping-tips.jpg"
             alt=""

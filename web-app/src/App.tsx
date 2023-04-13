@@ -4,6 +4,7 @@ import RegisterCreate from "./components/RegisterCreate";
 import Nav from "./components/nav"
 import Login from "./components/Login"
 import LandingPage from "./components/Landing"
+import PostCreate from "./components/postCreate"
 import { BrowserRouter as Router, Routes, Route, } from "react-router-dom";
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/register" element={<RegisterCreate />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/postCreate" element={<PostCreate />} />
         </Routes>
       </Router>
 
