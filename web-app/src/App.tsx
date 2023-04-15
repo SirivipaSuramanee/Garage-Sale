@@ -17,7 +17,6 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/register" element={<RegisterCreate />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/postCreate" element={<PostCreate />} />
         </Routes>
       </Router>
 

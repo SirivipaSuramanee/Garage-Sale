@@ -8,7 +8,6 @@ export interface PostInterface {
   DayTime_Open: Date;
   DayTime_Close: Date;
   Detail: string;
-
   CategoryID: number;
   Category: CategoryInterface;
 }
