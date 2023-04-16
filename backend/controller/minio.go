@@ -43,7 +43,11 @@ type HandlerFunc struct {
 func (h *HandlerFunc) UploadPicture(minioClient *minio.Client) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		img, _ := ctx.FormFile("img")
+		img, err := ctx.FormFile("img")
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err.Error())
+			return
+		}
 		file, _ := img.Open()
 		contentType := img.Header.Get("Content-Type")
 
@@ -53,6 +57,7 @@ func (h *HandlerFunc) UploadPicture(minioClient *minio.Client) gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
+
 		ctx.JSON(http.StatusOK, result.Location)
 	}
 }

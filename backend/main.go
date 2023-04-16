@@ -43,6 +43,6 @@ func main() {
 	r.GET("/category", controller.GetAllCategory)
 
 	//-----------Post-----------------
-	r.POST("/postCreate", controller.CreatePost)
+	r.POST("/postCreate", h.CreatePost(minioClient))
 	r.Run()
 }
