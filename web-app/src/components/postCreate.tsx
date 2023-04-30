@@ -20,7 +20,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import MenuItem from "@mui/material/MenuItem";
+
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
 
@@ -46,9 +46,7 @@ function PostCreate() {
     setPost({ ...post, [id]: value });
   };
 
-  const handleChange = (
-    event: SelectChangeEvent<String>
-  ) => {
+  const handleChange = (event: SelectChangeEvent<String>) => {
     const name = event.target.name as keyof typeof post; //
     console.log("name", event.target.name);
     console.log("value", event.target.value);
@@ -56,6 +54,14 @@ function PostCreate() {
     const { value } = event.target;
 
     setPost({ ...post, [name]: value });
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let file;
+    if (event.target.files && event.target.files.length > 0) {
+      file = event.target.files[0];
+    }
+    setPost({ ...post, ["Picture" as keyof typeof post]: file });
   };
 
   const handleClose = (
@@ -74,39 +80,31 @@ function PostCreate() {
   };
 
   function submit() {
-    let data = {
-      //เก็บข้อมูลที่จะเอาไปเก็บในดาต้าเบส
-      Topic: post.Topic ?? "",
-      CategoryID: post.CategoryID,
-      Price: Number(post.Price) ?? "",
-      Picture: post.Picture ?? "", //###############
-      DayTime_Open: Date,
-      DayTime_Close: Date,
-      Detail: post.Detail ?? "",
-    };
-    console.log(data);
+    const formData = new FormData(); 
+    if (post.Picture) {
+      formData.append("img", post.Picture);
+      const apiUrl = "http://localhost:8080/upload";
+      const requestOptions = {
+        method: "POST", //เอาข้อมูลไปเก็บไว้ในดาต้าเบส
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
+        },
 
-    // const apiUrl = "http://localhost:8080/postCreate";
-    // const requestOptions = {
-    //   method: "POST", //เอาข้อมูลไปเก็บไว้ในดาต้าเบส
-    //   headers: {
-    //     Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
-    //     "Content-Type": "application/json",
-    //   },
-
-    //   body: JSON.stringify(data),
-    // };
-
-    // fetch(apiUrl, requestOptions)
-    //   .then((response) => response.json())
-    //   .then((res) => {
-    //     if (res.msg) {
-    //       setSuccess(true);
-    //     } else {
-    //       setError(true);
-    //       setErrorMessage(res.error);
-    //     }
-    //   });
+        body: formData,
+      };
+      console.log(requestOptions);
+      fetch(apiUrl, requestOptions)
+        .then((response) => response.json())
+        .then((res) => {
+          if (res.msg) {
+            setSuccess(true);
+          } else {
+            setError(true);
+            setErrorMessage(res.error);
+          }
+          console.log(res);
+        });
+    }
   }
   const requestOptions = {
     method: "GET",
@@ -136,6 +134,9 @@ function PostCreate() {
     //ไม่ให้รันแบบอินฟินิตี้ลูป
     GetAllCategory();
   }, []);
+  const ClearImage = () => {
+    setPost({ ...post, ["Picture" as keyof typeof post]: undefined });
+  };
 
   return (
     <>
@@ -177,6 +178,7 @@ function PostCreate() {
             >
               สร้างโพสต์เปิดบ้าน
             </Typography>
+
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Typography
@@ -188,17 +190,18 @@ function PostCreate() {
                   หัวข้อ
                 </Typography>
                 <FormControl fullWidth variant="outlined">
-                <TextField
-                id="Topic"
-                variant="outlined"
-                type="string"
-                size="medium"
-                placeholder="wsdas"
-                value={post.Topic || ""}
-                onChange={handleInputChange}
-              />
+                  <TextField
+                    id="Topic"
+                    variant="outlined"
+                    type="string"
+                    size="medium"
+                    placeholder="wsdas"
+                    value={post.Topic || ""}
+                    onChange={handleInputChange}
+                  />
                 </FormControl>
               </Grid>
+
               <Grid item xs={6}>
                 <Typography
                   component="h1"
@@ -211,18 +214,23 @@ function PostCreate() {
 
                 <FormControl fullWidth variant="outlined">
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={post.Category?.Name || ""}
-                    name="Category"
+                    native
+                    value={String(post.CategoryID) || ""}
+                    inputProps={{
+                      name: "CategoryID", //เอาไว้เข้าถึงข้อมูล
+                    }}
                     onChange={handleChange}
                   >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    <option>none</option>
+                    {category.map((item: CategoryInterface) => (
+                      <option value={item.ID} key={item.ID}>
+                        {item.name}
+                      </option>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
+
               <Grid item xs={12}>
                 <Typography
                   component="h1"
@@ -233,9 +241,18 @@ function PostCreate() {
                   รายละเอียด
                 </Typography>
                 <FormControl fullWidth variant="outlined">
-                  <TextField label="Outlined" variant="outlined" />
+                  <TextField
+                    id="Detail"
+                    variant="outlined"
+                    type="string"
+                    size="medium"
+                    placeholder="wsdas"
+                    value={post.Detail || ""}
+                    onChange={handleInputChange}
+                  />
                 </FormControl>
               </Grid>
+
               <Grid item xs={6}>
                 <FormControl fullWidth variant="outlined">
                   <Typography
@@ -283,7 +300,31 @@ function PostCreate() {
                 >
                   รูปภาพสินค้า
                 </Typography>
-                <input type="file" onChange={handleChange} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                {post.Picture && (
+                  <>
+                    <Grid item xs={12}>
+                      <img
+                        src={URL.createObjectURL(post.Picture)}
+                        alt=""
+                        style={{ height: 200 }}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button
+                        onClick={() => {
+                          ClearImage();
+                        }}
+                      >
+                        ลบรูป
+                      </Button>
+                    </Grid>
+                  </>
+                )}
               </Grid>
               <Grid item xs={6}>
                 <Typography
@@ -294,7 +335,7 @@ function PostCreate() {
                 >
                   ที่อยู่
                 </Typography>
-               <Button>ปักหมุด📍</Button>
+                <Button>ปักหมุด📍</Button>
               </Grid>
             </Grid>
             <br />

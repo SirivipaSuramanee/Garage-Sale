@@ -24,12 +24,12 @@ type Catetagory struct {
 
 type Post struct {
 	gorm.Model
-	Topic         string      `json:"topic"`
-	Price         int         `json:"price"`
-	Picture       interface{} `json:"picture"` //###############
-	DayTime_Open  time.Time   `json:"dayTimeOpen"`
-	DayTime_Close time.Time   `json:"dayTimeClose"`
-	Detail        string      `json:"detail"`
+	Topic         string    `json:"topic"`
+	Price         int       `json:"price"`
+	Picture       string    `json:"picture"` //###############
+	DayTime_Open  time.Time `json:"dayTimeOpen"`
+	DayTime_Close time.Time `json:"dayTimeClose"`
+	Detail        string    `json:"detail"`
 
 	CatetagoryID *uint
 	Catetagory   Catetagory `gorm:"references:id"`

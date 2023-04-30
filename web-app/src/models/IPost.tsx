@@ -4,7 +4,7 @@ export interface PostInterface {
   ID: number;
   Topic: string;
   Price: number;
-  Picture: string; //###############
+  Picture: File; //###############
   DayTime_Open: Date;
   DayTime_Close: Date;
   Detail: string;
