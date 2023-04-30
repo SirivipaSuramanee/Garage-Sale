@@ -126,7 +126,7 @@ function PostCreate() {
       dayTimeOpen: OpenTime?.toISOString(),
       dayTimeClose: CloseTime?.toISOString(),
       Detail: post.Detail ?? "",
-      CatetagoryID: Number(post.CategoryID) ?? 0,
+      categoryID: Number(post.categoryID) ?? 0,
     }
     
     const requestOptions = {
@@ -255,9 +255,9 @@ function PostCreate() {
                 <FormControl fullWidth variant="outlined">
                   <Select
                     native
-                    value={String(post.CategoryID) || ""}
+                    value={String(post.categoryID) || ""}
                     inputProps={{
-                      name: "CategoryID", //เอาไว้เข้าถึงข้อมูล
+                      name: "categoryID", //เอาไว้เข้าถึงข้อมูล
                     }}
                     onChange={handleChange}
                   >

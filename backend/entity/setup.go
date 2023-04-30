@@ -24,7 +24,7 @@ func SetupDatabase(cgf config.Config) *gorm.DB {
 	}
 	database.AutoMigrate(
 		&User{},
-		&Catetagory{},
+		&Category{},
 		&Post{},
 	)
 	fmt.Print("Connected")

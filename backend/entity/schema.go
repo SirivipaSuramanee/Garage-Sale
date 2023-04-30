@@ -15,11 +15,11 @@ type User struct {
 	UserName  string `gorm:"uniqueIndex" json:"userName"`
 	Password  string `json:"password"`
 }
-type Catetagory struct {
+type Category struct {
 	gorm.Model
 	Name string `json:"name"`
 
-	Post []Post `gorm:"foreignKey:CatetagoryID"`
+	Post []Post `gorm:"foreignKey:CategoryID"`
 }
 
 type Post struct {
@@ -31,6 +31,6 @@ type Post struct {
 	DayTimeClose time.Time `json:"dayTimeClose"`
 	Detail       string    `json:"detail"`
 
-	CatetagoryID *uint      `json:"catetagoryID"`
-	Catetagory   Catetagory `gorm:"references:id"`
+	CategoryID *uint    `json:"categoryID"`
+	Category   Category `gorm:"references:id" json:"category"`
 }

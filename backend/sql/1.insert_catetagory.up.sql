@@ -1,2 +1,2 @@
-INSERT INTO catetagories (name)
+INSERT INTO categories (name)
 VALUES ('เครื่องดนตรี'),( 'แม่และเด็ก'),( 'เครื่องใช้ไฟฟ้า'),( 'คอมพิวเตอร์'),( 'รองเท้า');

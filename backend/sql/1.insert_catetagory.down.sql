@@ -1,1 +1,1 @@
-DELETE FROM catetagories ;
+DELETE FROM categories ;

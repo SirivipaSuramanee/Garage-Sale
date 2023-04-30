@@ -44,5 +44,7 @@ func main() {
 
 	//-----------Post-----------------
 	r.POST("/postCreate", h.CreatePost())
+	r.GET("/post", h.GetAllPost)
+
 	r.Run()
 }

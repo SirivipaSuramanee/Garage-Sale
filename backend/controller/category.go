@@ -9,9 +9,9 @@ import (
 
 func (h *HandlerFunc) GetAllCategory(c *gin.Context) {
 
-	var category []entity.Catetagory
+	var category []entity.Category
 
-	if err := h.pgDB.Model(entity.Catetagory{}).Scan(&category).Error; err != nil {
+	if err := h.pgDB.Model(entity.Category{}).Scan(&category).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

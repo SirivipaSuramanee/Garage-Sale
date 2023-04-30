@@ -5,6 +5,20 @@ export interface PostInterface {
   Price: number;
   Picture: File; //###############
   Detail: string;
-  CategoryID: number;
-  Category: CategoryInterface;
+  categoryID: number;
+  category: CategoryInterface;
 }
+
+
+export interface PostAllInterface {
+  ID: number;
+  topic: string;
+  price: number;
+  picture: File; //###############
+  dayTimeOpen: Date;
+  dayTimeClose: Date;
+  detail: string;
+  categoryID: number;
+  category: CategoryInterface;
+}
+
