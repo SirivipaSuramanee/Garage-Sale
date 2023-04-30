@@ -7,7 +7,7 @@ import LandingPage from "./components/Landing"
 import PostCreate from "./components/postCreate"
 import { BrowserRouter as Router, Routes, Route, } from "react-router-dom";
 function App() {
-
+  console.log(process.env.PORT)
   return (
     <div className="App">
 

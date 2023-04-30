@@ -3,18 +3,21 @@ package entity
 import (
 	"fmt"
 
+	"github.com/SirivipaSuramanee/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+func SetupDatabase(cgf config.Config) *gorm.DB {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=Asia/Bangkok",
+		cgf.PgHost,
+		cgf.PgUser,
+		cgf.PgPassword,
+		cgf.PgDBName,
+		cgf.PgPort,
+		cgf.PgSSLMode,
+	)
 
-func DB() *gorm.DB {
-	return db
-}
-
-func SetupDatabase() {
-	dsn := "host=localhost user=postgres password=postgres dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Bangkok"
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("Fail connect to database")
@@ -24,8 +27,7 @@ func SetupDatabase() {
 		&Catetagory{},
 		&Post{},
 	)
-
-	db = database
 	fmt.Print("Connected")
 
+	return database
 }

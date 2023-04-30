@@ -8,7 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Register(c *gin.Context) {
+func (h *HandlerFunc) Register(c *gin.Context) {
 	var user entity.User
 
 	if err := c.BindJSON(&user); err != nil {
@@ -26,7 +26,7 @@ func Register(c *gin.Context) {
 		UserName:  user.UserName,
 		Password:  string(password),
 	}
-	if err := entity.DB().Create(&us).Error; err != nil {
+	if err := h.pgDB.Create(&us).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

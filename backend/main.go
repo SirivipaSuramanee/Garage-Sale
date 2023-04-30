@@ -13,16 +13,16 @@ import (
 )
 
 func main() {
-	entity.SetupDatabase()
 
 	cgf := config.LoadConFig(".")
 	ctx := context.Background()
-	minioClient, err := controller.ConnectMiniO(cgf, ctx)
+	db := entity.SetupDatabase(cgf)
+	minioClient, err := config.ConnectMiniO(cgf, ctx)
 
 	if err != nil {
 		log.Fatalln(err)
 	}
-	h := controller.NewHandlerFunc(&cgf)
+	h := controller.NewHandlerFunc(&cgf, db, minioClient)
 
 	// connect minio
 
@@ -33,16 +33,16 @@ func main() {
 		c.JSON(http.StatusOK, "service up")
 	})
 	//--------------minio---------------
-	r.POST("/upload", h.UploadPicture(minioClient))
+	r.POST("/upload", h.UploadPicture())
 
 	//--------------Login---------------
-	r.POST("/registerCreate", controller.Register)
-	r.POST("/login", controller.Login)
+	r.POST("/registerCreate", h.Register)
+	r.POST("/login", h.Login)
 
 	//------------category--------------
-	r.GET("/category", controller.GetAllCategory)
+	r.GET("/category", h.GetAllCategory)
 
 	//-----------Post-----------------
-	r.POST("/postCreate", h.CreatePost(minioClient))
+	r.POST("/postCreate", h.CreatePost())
 	r.Run()
 }

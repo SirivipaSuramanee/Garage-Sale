@@ -1,46 +1,31 @@
 package controller
 
 import (
-	"context"
-	"fmt"
 	"mime/multipart"
 	"net/http"
+	"time"
 
 	"github.com/SirivipaSuramanee/config"
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/credentials"
+	"gorm.io/gorm"
 )
 
-func NewHandlerFunc(cgf *config.Config) HandlerFunc {
+func NewHandlerFunc(cgf *config.Config, pgDB *gorm.DB, minio *minio.Client) HandlerFunc {
 	return HandlerFunc{
-		cgf: cgf,
+		cgf:   cgf,
+		pgDB:  pgDB,
+		minio: minio,
 	}
-}
-
-func ConnectMiniO(cgf config.Config, ctx context.Context) (*minio.Client, error) {
-	minioClient, err := minio.New(cgf.StorageEndpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(cgf.StorageUser, cgf.StoragePassword, ""),
-		Secure: cgf.StorageSSL,
-	})
-	errB := CreateMakeBucket(ctx, cgf, minioClient)
-
-	if errB != nil {
-		fmt.Printf("errB: %v\n", errB)
-	}
-	return minioClient, err
-}
-
-// Create a bucket at region 'us-east-1' with object locking enabled.
-func CreateMakeBucket(ctx context.Context, cgf config.Config, minioClient *minio.Client) (err error) {
-	return minioClient.MakeBucket(ctx, cgf.StorageBucketName, minio.MakeBucketOptions{Region: "us-east-1", ObjectLocking: true})
 }
 
 type HandlerFunc struct {
-	cgf *config.Config
+	cgf   *config.Config
+	pgDB  *gorm.DB
+	minio *minio.Client
 }
 
-func (h *HandlerFunc) UploadPicture(minioClient *minio.Client) gin.HandlerFunc {
+func (h *HandlerFunc) UploadPicture() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		img, err := ctx.FormFile("img")
@@ -51,14 +36,16 @@ func (h *HandlerFunc) UploadPicture(minioClient *minio.Client) gin.HandlerFunc {
 		file, _ := img.Open()
 		contentType := img.Header.Get("Content-Type")
 
-		result, err := UploadPictureRopository(minioClient, ctx, contentType, file, h.cgf.StorageBucketName, img.Filename)
+		fileName := time.Now().Format("01-02-2006-15:04") + img.Filename
+
+		result, err := UploadPictureRopository(h.minio, ctx, contentType, file, h.cgf.StorageBucketName, fileName)
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
 
-		ctx.JSON(http.StatusOK, result.Location)
+		ctx.JSON(http.StatusOK, gin.H{"data": result.Location})
 	}
 }
 

@@ -20,6 +20,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import dayjs, { Dayjs } from 'dayjs';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -34,6 +35,8 @@ function PostCreate() {
   const [category, setCategory] = useState<CategoryInterface[]>([]);
   const [success, setSuccess] = useState(false); //จะยังไม่ให้แสดงบันทึกข้อมูล
   const [error, setError] = useState(false);
+  const [OpenTime, setOpenTime] = useState<Dayjs | null>(dayjs(new Date));
+  const [CloseTime, setCloseTime] = useState<Dayjs | null>(dayjs(new Date));
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleInputChange = (
@@ -79,6 +82,7 @@ function PostCreate() {
     setError(false);
   };
 
+
   function submit() {
     const formData = new FormData(); 
     if (post.Picture) {
@@ -92,12 +96,12 @@ function PostCreate() {
 
         body: formData,
       };
-      console.log(requestOptions);
+    
       fetch(apiUrl, requestOptions)
         .then((response) => response.json())
         .then((res) => {
-          if (res.msg) {
-            setSuccess(true);
+          if (res.data) {
+            PostSavePost(res.data)
           } else {
             setError(true);
             setErrorMessage(res.error);
@@ -114,6 +118,42 @@ function PostCreate() {
     },
   };
 
+  const PostSavePost = async (picURL: string) => {
+    const data = {
+      Topic: post.Topic ?? "",
+      Price: Number(post.Price) ?? 0,
+      Picture: picURL ?? "", 
+      dayTimeOpen: OpenTime?.toISOString(),
+      dayTimeClose: CloseTime?.toISOString(),
+      Detail: post.Detail ?? "",
+      CatetagoryID: Number(post.CategoryID) ?? 0,
+    }
+    
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data)
+    };
+
+    console.log(data)
+  
+    const apiUrl = "http://localhost:8080/postCreate";
+
+    fetch(apiUrl , requestOptions)
+    .then((response) => response.json())
+    .then((res) => {
+      if (res.data){
+        setSuccess(true);
+      }else{
+        setError(true);
+        setErrorMessage(res.error);
+      }
+     
+    })
+  }
   const GetAllCategory = async () => {
     const apiUrl = "http://localhost:8080/category";
 
@@ -266,7 +306,11 @@ function PostCreate() {
 
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DateTimePicker"]}>
-                      <DateTimePicker />
+                      <DateTimePicker 
+                      value={OpenTime}
+                      onChange={(value) => {
+                        setOpenTime(value);
+                      }} />
                     </DemoContainer>
                   </LocalizationProvider>
                 </FormControl>
@@ -284,7 +328,11 @@ function PostCreate() {
 
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DateTimePicker"]}>
-                      <DateTimePicker />
+                      <DateTimePicker 
+                        value={CloseTime}
+                      onChange={(value) => {
+                        setCloseTime(value);
+                      }} />
                     </DemoContainer>
                   </LocalizationProvider>
                 </FormControl>
@@ -336,6 +384,19 @@ function PostCreate() {
                   ที่อยู่
                 </Typography>
                 <Button>ปักหมุด📍</Button>
+              </Grid>
+              <Grid item xs={6}>
+              <FormControl fullWidth variant="outlined">
+                  <TextField
+                    id="Price"
+                    variant="outlined"
+                    type="number"
+                    size="medium"
+                    placeholder="ราคา"
+                    value={post.Price || ""}
+                    onChange={handleInputChange}
+                  />
+                </FormControl>
               </Grid>
             </Grid>
             <br />

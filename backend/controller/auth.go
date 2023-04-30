@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Login(c *gin.Context) {
+func (h *HandlerFunc) Login(c *gin.Context) {
 	var login entity.User
 	var user entity.User
 
@@ -20,7 +20,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	fmt.Printf("login: %v\n", login)
-	tx := entity.DB().Model(entity.User{}).Where("user_name = ?", login.UserName).First(&user)
+	tx := h.pgDB.Model(entity.User{}).Where("user_name = ?", login.UserName).First(&user)
 
 	if tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
