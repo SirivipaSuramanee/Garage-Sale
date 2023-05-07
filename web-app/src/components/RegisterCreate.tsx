@@ -1,5 +1,5 @@
 import { UserInterface } from "../models/IUser";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
@@ -9,20 +9,12 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import React from "react";
-import CssBaseline from "@mui/material/CssBaseline";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import { Link as RouterLink } from "react-router-dom";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
-
   ref
 ) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -37,25 +29,12 @@ function RegisterCreate() {
     event: React.ChangeEvent<{ id?: string; value: any }> //ชื่อคอมลัมน์คือ id และค่าที่จะเอามาใส่ไว้ในคอมลัมน์นั้นคือ value
   ) => {
     const id = event.target.id as keyof typeof register; //
-    // console.log(event.target.id);
-    // console.log(event.target.value);
 
     const { value } = event.target;
 
     setRegister({ ...register, [id]: value });
   };
 
-  const handleChange = (
-    event: React.ChangeEvent<{ name?: string; value: any }> //ชื่อคอมลัมน์คือ name และค่าที่จะเอามาใส่ไว้ในคอมลัมน์นั้นคือ value
-  ) => {
-    const name = event.target.name as keyof typeof register; //
-    console.log("name", event.target.name);
-    console.log("value", event.target.value);
-
-    const { value } = event.target;
-
-    setRegister({ ...register, [name]: value });
-  };
   const handleClose = (
     event?: React.SyntheticEvent | Event,
 
@@ -81,16 +60,10 @@ function RegisterCreate() {
       userName: register.UserName ?? "",
       password: register.Password ?? "",
     };
-    console.log(data);
 
     const apiUrl = "http://localhost:8080/registerCreate";
     const requestOptions = {
-      method: "POST", //เอาข้อมูลไปเก็บไว้ในดาต้าเบส
-      // headers: {
-      //   Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
-      //   "Content-Type": "application/json",
-      // },
-
+      method: "POST",
       body: JSON.stringify(data),
     };
 
@@ -104,12 +77,9 @@ function RegisterCreate() {
           setErrorMessage(res.error);
         }
       });
-      
   }
   return (
     <>
-      
-      <CssBaseline />
       <Container maxWidth="md">
         <Snackbar
           id="success"
@@ -135,26 +105,14 @@ function RegisterCreate() {
 
         <Paper
           sx={{
-            // bgcolor: "#dbcfb1",
-            height: "100h",
-            padding: 13,
+            padding: 4,
           }}
         >
-          <Box>  <Box
-          display="flex"
-          sx={{
-            marginTop: 2,
-          }}
-        >
-          <Box sx={{ paddingX: 2, paddingY: 1 }}>
-          </Box>
-        </Box></Box>
-        
           <img
             src="https://www.immihelp.com/assets/cms/yard-sale-garage-sale-shopping-tips.jpg"
             alt=""
-            width="100%"
-            height="100%"
+            width="80%"
+            height="80%"
           />
           <Stack spacing={2} justifyContent="center" alignItems="center">
             <Box
@@ -170,7 +128,7 @@ function RegisterCreate() {
                 Register
               </Typography>
             </Box>
-            <Divider />
+          
             <Grid container spacing={4}>
               <Grid item xs={6}>
                 {/* <FormControl fullWidth variant="outlined">

@@ -13,7 +13,7 @@ import Tab from "@mui/material/Tab";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonPinIcon from "@mui/icons-material/PersonPin";
 import HomeIcon from '@mui/icons-material/Home';
-import PostCreate from "./postCreate"
+import PostCreate from "./post/postCreate"
 
 
 export default function IconLabelTabs() {
@@ -36,10 +36,10 @@ export default function IconLabelTabs() {
           >
             <Tab icon={<HomeIcon />} label="HOME" />
             <Tab icon={<AddBusinessIcon />} label="POST" />
-            <Tab icon={<FavoriteIcon />} label="FAVORITES" />
-            <Tab icon={<PersonPinIcon />} label="NEARBY" />
+            {/* <Tab icon={<FavoriteIcon />} label="FAVORITES" />
+            <Tab icon={<PersonPinIcon />} label="NEARBY" /> */}
           </Tabs>
-        {value === 0 &&  <PostPage />}
+       {value === 0 &&  <PostPage />}
        {value === 1 && <PostCreate />}
        
 

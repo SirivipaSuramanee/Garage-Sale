@@ -1,7 +1,15 @@
 .App {
   text-align: center;
 }
-
+.MuiCardMedia-root.MuiCardMedia-media.MuiCardMedia-img.css-o69gx8-MuiCardMedia-root.css-o69gx8-MuiCardMedia-root{
+  height: 400px;
+  
+ 
+  background: #ccc;
+  width: 100%;
+  object-fit:contain;
+ 
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

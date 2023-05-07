@@ -14,10 +14,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Navigate } from "react-router-dom";
 
 
 
@@ -65,22 +62,42 @@ export default function Login() {
     setError(false);
   };
 
-  function submit() {
+   function submit() {
     let data = {
       //เก็บข้อมูลที่จะเอาไปเก็บในดาต้าเบส
       userName: register.UserName ?? "",
       password: register.Password ?? "",
     };
-    console.log(data);
+   
 
     const apiUrl = "http://localhost:8080/login";
     const requestOptions ={
       method: "POST",
       body: JSON.stringify(data), 
     };
-    fetch(apiUrl,requestOptions)
+    let active = false;
+     fetch(apiUrl,requestOptions)
     .then((res) => res.json())
-    .then((res) => {console.log(res)}) 
+    .then((res) => {
+      if (res.data) {
+        localStorage.setItem("token", res.data.Token)
+        localStorage.setItem("email", res.data.Email)
+        setSuccess(true)
+        active = true;
+      }else{
+        setError(true)
+        setErrorMessage(res.error)
+      }
+    }).finally(() => {
+      console.log(active)
+      console.log(localStorage.getItem("token"))
+      if (active && localStorage.getItem("email") && localStorage.getItem("token")) {
+        window.location.href = "/";
+      }
+    })
+
+   
+ 
   }
 
   
@@ -112,17 +129,15 @@ export default function Login() {
         </Snackbar>
 
         <Paper
-          sx={{
-            // bgcolor: "#dbcfb1",
-            height: "100h",
+          sx={{      
             padding: 13,
           }}
         >
           <img
             src="https://www.immihelp.com/assets/cms/yard-sale-garage-sale-shopping-tips.jpg"
             alt=""
-            width="100%"
-            height="100%"
+            width="80%"
+            height="80%"
           />
           <Stack spacing={2} justifyContent="center" alignItems="center">
             <Box

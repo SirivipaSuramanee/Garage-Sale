@@ -1,83 +1,98 @@
 import {useEffect, useState} from "react";
-import Paper from "@mui/material/Paper";
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import CardHeader from '@mui/material/CardHeader';
+import Typography from '@mui/material/Typography';
 import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import Button from "@mui/material/Button";
+
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+
 import { PostAllInterface } from "../../models/IPost";
+import CardMedia from '@mui/material/CardMedia';
+import CardActions from '@mui/material/CardActions';
+
+import { red } from '@mui/material/colors';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import dayjs from "dayjs";
+
+
 
 type Dataprops = {
   Data: PostAllInterface;
 };
 
 export function Post(prop:Dataprops ) {
-  const [post,SetPost] = useState<PostAllInterface[]>([])
-  const [like, setlike] = useState(0);
+  
+  const [favorites, setFavorites] = useState("inherit");
  
   
   return (
-    <>
-      <Box
+
+      <Card 
         component="div"
         sx={{
           padding: 1,
           marginLeft: 1,
           marginRight: 1,
+        
           "&:hover": {
             backgroundColor: "#C9DFEC",
             opacity: [0.9, 0.8, 0.7],
           },
         }}
       >
-        <Stack
-          sx={{ padding: 1 }}
-          direction="column"
-          justifyContent="space-between"
-        >
-          <h2>หัวข้อ: {prop.Data.topic}</h2>
-          
-          <h2>หมวดหมู่ {prop.Data.category?.name}</h2>
-          <Stack
-            sx={{ padding: 1 }}
-            spacing={1}
-            direction="row"
-            alignItems="flex-start"
-          >
-            <h5>FAH007</h5>
-            <Avatar>A</Avatar>
-          </Stack>
-        </Stack>
-
-        <ImageList sx={{ width: "100%", height: 250 }} cols={3} rowHeight={164}>
-          
-            <ImageListItem key={prop.Data.ID}>
-              <img
-                src={`${prop.Data.picture}?w=164&h=164&fit=crop&auto=format`}
-                srcSet={`${prop.Data.picture}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                // alt={item.title}
-                loading="lazy"
-              />
-            </ImageListItem>
+         <CardHeader
+        avatar={
+          <Avatar alt={String(prop.Data.ID)} src="https://scontent.fbkk28-1.fna.fbcdn.net/v/t31.18172-8/26233586_2037243259892167_1503644297872507601_o.jpg?_nc_cat=109&ccb=1-7&_nc_sid=19026a&_nc_eui2=AeEaH7zAvUNhU3XxHr6yo8sd00-XPHOJF_rTT5c8c4kX-lBeqyaUfUEsBQ11bRQJvl6143oa3K6Iwx-CwZe9Rtc1&_nc_ohc=HGntZ9iJD6cAX8GdySM&_nc_ht=scontent.fbkk28-1.fna&oh=00_AfDKShBd3XVYNOHOA7iWWCAxwnHOnVieeSPQ5UCCddpoaA&oe=647A0DAB">
+            
+          </Avatar>
+        }
+        action={
+          <IconButton aria-label="settings">
+            <MoreVertIcon />
+          </IconButton>
+        }
+        title={prop.Data.topic}
         
-        </ImageList>
-        <div style={{ width: "100%", padding: "20px" }}>
-          <p>รายละเอียด: {prop.Data.detail}</p>
-          <p>ราคา: {prop.Data.price}</p>
-        </div>
-        <p>เวลาเปิดบ้าน: {prop.Data.dayTimeOpen.toString()}</p>
-        <p>เวลาปิดบ้าน: {prop.Data.dayTimeClose.toString()}</p>
-        <Stack
-          direction="row"
-          justifyContent="space-around"
-          alignItems="center"
-        >
-          
-          <Button>LIKE</Button>
-          <Button>LOCATION</Button>
-        </Stack>
-      </Box>
-    </>
+        subheader={dayjs(prop.Data.CreatedAt).format('DD MMM, YYYY')}
+      />
+        <CardMedia
+        component="img"
+        className="css-o69gx8-MuiCardMedia-root"
+        
+        image={prop.Data.picture}
+        alt="Paella dish"
+      />
+        <CardContent>
+        <Typography variant="h6" >
+        ราคา: {prop.Data.price} บาท
+        </Typography>
+        <br />
+        <Typography variant="body1" sx={{ textAlign: "start"}}>
+        {prop.Data.detail}
+        </Typography>
+        </CardContent> 
+       <Typography variant="body1" sx={{ textAlign: "start"}}>เวลาเปิดบ้าน: {dayjs(prop.Data.dayTimeOpen).format('DD MMM, YYYY')} ถึง {dayjs(prop.Data.dayTimeClose).format('DD MMM, YYYY')}</Typography>
+     
+       <CardActions>
+        <IconButton aria-label="add to favorites" onClick={() => {
+            if (favorites === "red") {
+              setFavorites("inherit")
+            }else{
+              setFavorites("red")
+            }
+        }}>
+          <FavoriteIcon sx={{ color: favorites}} />
+        </IconButton>
+        <IconButton aria-label="add to location" >
+           <LocationOnIcon/>
+        </IconButton>
+       
+       </CardActions>
+      </Card >
+  
   );
 }

@@ -12,9 +12,10 @@ export interface PostInterface {
 
 export interface PostAllInterface {
   ID: number;
+  CreatedAt: Date;
   topic: string;
   price: number;
-  picture: File; //###############
+  picture: string; //###############
   dayTimeOpen: Date;
   dayTimeClose: Date;
   detail: string;

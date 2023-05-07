@@ -3,18 +3,16 @@ import './App.css';
 import RegisterCreate from "./components/RegisterCreate";
 import Nav from "./components/nav"
 import Login from "./components/Login"
-import LandingPage from "./components/Landing"
-import PostCreate from "./components/postCreate"
+import Home from "./components/home"
 import { BrowserRouter as Router, Routes, Route, } from "react-router-dom";
 function App() {
-  console.log(process.env.PORT)
   return (
     <div className="App">
 
       <Router>
         <Nav />
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Home />} />
           <Route path="/register" element={<RegisterCreate />} />
           <Route path="/login" element={<Login />} />
         </Routes>

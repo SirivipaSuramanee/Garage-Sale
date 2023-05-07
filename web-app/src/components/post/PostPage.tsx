@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import { PostAllInterface } from "../../models/IPost";
 import { Post } from "./post"
 
+
 export default function PostPage() {
   const [post,SetPost] = useState<PostAllInterface[]>([])
   const [like, setlike] = useState(0);
@@ -39,9 +40,12 @@ export default function PostPage() {
   <>
   {
     post.map((item:PostAllInterface) => (
+      <>
       <Post 
       Data={item}
       ></Post> 
+     
+      </>
     ))
   }
   </>
