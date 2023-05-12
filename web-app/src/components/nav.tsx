@@ -13,20 +13,29 @@ import Avatar from "@mui/material/Avatar/Avatar";
 import Menu from "@mui/material/Menu/Menu";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
 
+
 const settings = ["Profile", "Logout"];
 export default function Nav() {
   const [token, setToken] = useState<String | null>(null);
+  const [profileURL,setProfileURL] = useState<string | null>(null);
 
   const getToken = () => {
     const token = localStorage.getItem("token");
     setToken(token);
   };
 
+  const getProfileURL = () => {
+    const profileURL = localStorage.getItem("profileURL");
+    setProfileURL(profileURL);
+  };
+
   useEffect(() => {
+    
     getToken();
+    getProfileURL();
   }, [token]);
 
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+ 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
 
@@ -59,7 +68,7 @@ export default function Nav() {
             sx={{ flexGrow: 1 }}
             justifyContent="space-between"
           >
-            <Typography variant="h4" component="div">
+            <Typography variant="h4" component="a" href="/" style={{textDecoration: "none"}} color="pink">
               Garage Sale
             </Typography>
 
@@ -92,7 +101,7 @@ export default function Nav() {
                     <IconButton  onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                       <Avatar
                         alt="Remy Sharp"
-                        src="/static/images/avatar/2.jpg"
+                        src={profileURL!}
                       />
                     </IconButton>
                   </Tooltip>

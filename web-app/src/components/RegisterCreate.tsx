@@ -1,5 +1,5 @@
 import { UserInterface } from "../models/IUser";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
@@ -24,6 +24,7 @@ function RegisterCreate() {
   const [success, setSuccess] = useState(false); //จะยังไม่ให้แสดงบันทึกข้อมูล
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [img, setImg] = useState<File>();
 
   const handleInputChange = (
     event: React.ChangeEvent<{ id?: string; value: any }> //ชื่อคอมลัมน์คือ id และค่าที่จะเอามาใส่ไว้ในคอมลัมน์นั้นคือ value
@@ -49,34 +50,71 @@ function RegisterCreate() {
 
     setError(false);
   };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setImg(event.target.files[0]);
+    }
+  };
+
+
 
   function submit() {
-    let data = {
-      //เก็บข้อมูลที่จะเอาไปเก็บในดาต้าเบส
-      firstName: register.FirstName ?? "",
-      lastName: register.LastName ?? "",
-      tel: register.Tel ?? "",
-      email: register.Email ?? "",
-      userName: register.UserName ?? "",
-      password: register.Password ?? "",
-    };
+    const formData = new FormData(); 
+  
+    if (img) {
+      formData.append("img", img);
+      const apiUrl = "http://localhost:8080/upload";
+      const requestOptions = {
+        method: "POST", //เอาข้อมูลไปเก็บไว้ในดาต้าเบส
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
+        },
 
-    const apiUrl = "http://localhost:8080/registerCreate";
-    const requestOptions = {
-      method: "POST",
-      body: JSON.stringify(data),
-    };
+        body: formData,
+      };
+    
+      fetch(apiUrl, requestOptions)
+        .then((response) => response.json())
+        .then((res) => {
+          if (res.data) {
+            let data = {
+              //เก็บข้อมูลที่จะเอาไปเก็บในดาต้าเบส
+              firstName: register.FirstName ?? "",
+              lastName: register.LastName ?? "",
+              tel: register.Tel ?? "",
+              email: register.Email ?? "",
+              userName: register.UserName ?? "",
+              password: register.Password ?? "",
+              profileURL: res.data
+            };
+        
+            const apiUrl = "http://localhost:8080/registerCreate";
+            const requestOptions = {
+              method: "POST",
+              body: JSON.stringify(data),
+            };
+        
+            fetch(apiUrl, requestOptions)
+              .then((response) => response.json())
+              .then((res) => {
+                if (res.msg) {
+                  setSuccess(true);
+                } else {
+                  setError(true);
+                  setErrorMessage(res.error);
+                }
+              });
+           
+          } else {
+            setError(true);
+            setErrorMessage(res.error);
+          }
+          console.log(res);
+        });
+    }
 
-    fetch(apiUrl, requestOptions)
-      .then((response) => response.json())
-      .then((res) => {
-        if (res.msg) {
-          setSuccess(true);
-        } else {
-          setError(true);
-          setErrorMessage(res.error);
-        }
-      });
+    
+    
   }
   return (
     <>
@@ -128,7 +166,7 @@ function RegisterCreate() {
                 Register
               </Typography>
             </Box>
-          
+
             <Grid container spacing={4}>
               <Grid item xs={6}>
                 {/* <FormControl fullWidth variant="outlined">
@@ -218,6 +256,20 @@ function RegisterCreate() {
                   onChange={handleInputChange}
                 />
                 {/* </FormControl> */}
+              </Grid>
+              <Grid item xs={6}>
+                <h2>อัพโหลดรูป:</h2>
+                <input type="file" onChange={handleChange} />
+              
+              </Grid>
+              <Grid item xs={6}>
+                <h2>preview</h2>
+                {
+                !img  ? 
+                 <img src="https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg" style={{ height: 200,width: 200  }}/> :
+                 <img src={URL.createObjectURL(img)} style={{ height: 200, width: 200 , objectFit: "cover"}} />
+                }
+                
               </Grid>
             </Grid>
             <Divider />

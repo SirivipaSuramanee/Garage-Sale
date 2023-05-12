@@ -5,7 +5,7 @@ import { Post } from "./post"
 
 export default function PostPage() {
   const [post,SetPost] = useState<PostAllInterface[]>([])
-  const [like, setlike] = useState(0);
+
   
 
   const requestOptions = {
@@ -19,6 +19,7 @@ export default function PostPage() {
     //ทำงานทุกครั้งที่เรารีเฟชหน้าจอ
     //ไม่ให้รันแบบอินฟินิตี้ลูป
     GetAllPost();
+    
   }, []);
   const GetAllPost = async () => {
     const apiUrl = "http://localhost:8080/post";

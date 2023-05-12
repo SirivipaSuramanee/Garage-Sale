@@ -8,18 +8,29 @@ import (
 
 type User struct {
 	gorm.Model
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Tel       string `json:"tel"`
-	Email     string `gorm:"uniqueIndex" json:"email"`
-	UserName  string `gorm:"uniqueIndex" json:"userName"`
-	Password  string `json:"password"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	Tel        string `json:"tel"`
+	Email      string `gorm:"uniqueIndex" json:"email"`
+	UserName   string `gorm:"uniqueIndex" json:"userName"`
+	Password   string `json:"password"`
+	ProfileURL string `json:"profileURL"`
+
+	Post []Post `gorm:"foreignKey:UserID"`
 }
 type Category struct {
 	gorm.Model
 	Name string `json:"name"`
 
-	Post []Post `gorm:"foreignKey:CategoryID"`
+	MapPostCategory []MapPostCategory `gorm:"foreignKey:CategoryID"`
+}
+
+type MapPostCategory struct {
+	CategoryID *uint    `json:"categoryID"`
+	Category   Category `gorm:"references:id" json:"category"`
+
+	PostID *uint `json:"PostID"`
+	Post   Post  `gorm:"references:id" json:"post"`
 }
 
 type Post struct {
@@ -31,6 +42,8 @@ type Post struct {
 	DayTimeClose time.Time `json:"dayTimeClose"`
 	Detail       string    `json:"detail"`
 
-	CategoryID *uint    `json:"categoryID"`
-	Category   Category `gorm:"references:id" json:"category"`
+	UserID *uint `json:"userID"`
+	User   User  `gorm:"references:id" json:"user"`
+
+	MapPostCategory []MapPostCategory `gorm:"foreignKey:PostID"`
 }

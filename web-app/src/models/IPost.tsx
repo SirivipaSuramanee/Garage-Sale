@@ -21,5 +21,8 @@ export interface PostAllInterface {
   detail: string;
   categoryID: number;
   category: CategoryInterface;
+  user: {
+    profileURL: string,
+  }
 }
 

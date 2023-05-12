@@ -46,7 +46,7 @@ export function Post(prop:Dataprops ) {
       >
          <CardHeader
         avatar={
-          <Avatar alt={String(prop.Data.ID)} src="https://scontent.fbkk28-1.fna.fbcdn.net/v/t31.18172-8/26233586_2037243259892167_1503644297872507601_o.jpg?_nc_cat=109&ccb=1-7&_nc_sid=19026a&_nc_eui2=AeEaH7zAvUNhU3XxHr6yo8sd00-XPHOJF_rTT5c8c4kX-lBeqyaUfUEsBQ11bRQJvl6143oa3K6Iwx-CwZe9Rtc1&_nc_ohc=HGntZ9iJD6cAX8GdySM&_nc_ht=scontent.fbkk28-1.fna&oh=00_AfDKShBd3XVYNOHOA7iWWCAxwnHOnVieeSPQ5UCCddpoaA&oe=647A0DAB">
+          <Avatar alt={String(prop.Data.ID)} src={prop.Data.user.profileURL}>
             
           </Avatar>
         }

@@ -47,8 +47,9 @@ func (h *HandlerFunc) Login(c *gin.Context) {
 	}
 
 	tokenResponse := service.LoginResponse{
-		Token: signedToken,
-		Email: user.Email,
+		Token:      signedToken,
+		Email:      user.Email,
+		ProfileURL: user.ProfileURL,
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": tokenResponse})

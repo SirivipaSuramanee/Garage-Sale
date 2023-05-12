@@ -19,12 +19,13 @@ func (h *HandlerFunc) Register(c *gin.Context) {
 	password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
 
 	us := entity.User{
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		Tel:       user.Tel,
-		Email:     user.Email,
-		UserName:  user.UserName,
-		Password:  string(password),
+		FirstName:  user.FirstName,
+		LastName:   user.LastName,
+		Tel:        user.Tel,
+		Email:      user.Email,
+		UserName:   user.UserName,
+		Password:   string(password),
+		ProfileURL: user.ProfileURL,
 	}
 	if err := h.pgDB.Create(&us).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

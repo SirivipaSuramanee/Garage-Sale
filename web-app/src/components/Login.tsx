@@ -9,31 +9,29 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import FormControl from "@mui/material/FormControl";
+import Checkbox from '@mui/material/Checkbox';
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import { Navigate } from "react-router-dom";
-
-
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 export default function Login() {
   const [register, setRegister] = useState<Partial<UserInterface>>({}); //Partial ชิ้นส่วนเอาไว้เซทข้อมูลที่ละส่วน
   const [success, setSuccess] = useState(false); //จะยังไม่ให้แสดงบันทึกข้อมูล
   const [error, setError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleInputChange = (
     event: React.ChangeEvent<{ id?: string; value: any }> //ชื่อคอมลัมน์คือ id และค่าที่จะเอามาใส่ไว้ในคอมลัมน์นั้นคือ value
   ) => {
     const id = event.target.id as keyof typeof register; //
-  
 
     const { value } = event.target;
 
     setRegister({ ...register, [id]: value });
-    console.log(value)
+    console.log(value);
   };
 
   const handleChange = (
@@ -62,45 +60,43 @@ export default function Login() {
     setError(false);
   };
 
-   function submit() {
+  function submit() {
     let data = {
       //เก็บข้อมูลที่จะเอาไปเก็บในดาต้าเบส
       userName: register.UserName ?? "",
       password: register.Password ?? "",
     };
-   
 
     const apiUrl = "http://localhost:8080/login";
-    const requestOptions ={
+    const requestOptions = {
       method: "POST",
-      body: JSON.stringify(data), 
+      body: JSON.stringify(data),
     };
     let active = false;
-     fetch(apiUrl,requestOptions)
-    .then((res) => res.json())
-    .then((res) => {
-      if (res.data) {
-        localStorage.setItem("token", res.data.Token)
-        localStorage.setItem("email", res.data.Email)
-        setSuccess(true)
-        active = true;
-      }else{
-        setError(true)
-        setErrorMessage(res.error)
-      }
-    }).finally(() => {
-      console.log(active)
-      console.log(localStorage.getItem("token"))
-      if (active && localStorage.getItem("email") && localStorage.getItem("token")) {
-        window.location.href = "/";
-      }
-    })
-
-   
- 
+    fetch(apiUrl, requestOptions)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.data) {
+          localStorage.setItem("token", res.data.Token);
+          localStorage.setItem("email", res.data.Email);
+          localStorage.setItem("profileURL", res.data.ProfileURL);
+          setSuccess(true);
+          active = true;
+        } else {
+          setError(true);
+          setErrorMessage(res.error);
+        }
+      })
+      .finally(() => {
+        if (
+          active &&
+          localStorage.getItem("email") &&
+          localStorage.getItem("token")
+        ) {
+          window.location.href = "/";
+        }
+      });
   }
-
-  
 
   return (
     <>
@@ -129,7 +125,7 @@ export default function Login() {
         </Snackbar>
 
         <Paper
-          sx={{      
+          sx={{
             padding: 13,
           }}
         >
@@ -168,16 +164,22 @@ export default function Login() {
               </Grid>
 
               <Grid item xs={6}>
-                <TextField
-                  id="Password"
-                  variant="outlined"
-                  label="Password"
-                  type="string"
-                  size="medium"
-                  value={register.Password || ""}
-                  onChange={handleInputChange}
-                />
-                
+              <Grid item>
+                  <TextField
+                    id="Password"
+                    variant="outlined"
+                    label="Password"
+                    type={showPassword ? "string" : "password"}
+                    size="medium"
+                    value={register.Password || ""}
+                    onChange={handleInputChange}
+                  />
+               </Grid>
+               <Grid >
+               <FormControlLabel control={<Checkbox checked={showPassword} onClick={() => {setShowPassword(!showPassword)}}/>} label="show password" />
+               </Grid>
+             
+               
               </Grid>
             </Grid>
             <Divider />
@@ -192,5 +194,3 @@ export default function Login() {
     </>
   );
 }
-
-

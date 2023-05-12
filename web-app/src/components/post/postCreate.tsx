@@ -120,13 +120,14 @@ function PostCreate() {
 
   const PostSavePost = async (picURL: string) => {
     const data = {
-      Topic: post.Topic ?? "",
-      Price: Number(post.Price) ?? 0,
-      Picture: picURL ?? "", 
+      topic: post.Topic ?? "",
+      price: Number(post.Price) ?? 0,
+      picture: picURL ?? "", 
       dayTimeOpen: OpenTime?.toISOString(),
       dayTimeClose: CloseTime?.toISOString(),
-      Detail: post.Detail ?? "",
+      detail: post.Detail ?? "",
       categoryID: Number(post.categoryID) ?? 0,
+      email: localStorage.getItem("email")
     }
     
     const requestOptions = {

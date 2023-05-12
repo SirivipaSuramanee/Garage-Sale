@@ -8,8 +8,9 @@ import (
 )
 
 type LoginResponse struct {
-	Token string
-	Email string
+	Token      string
+	Email      string
+	ProfileURL string
 }
 
 // JwtWrapper wraps the signing key and the issuer
