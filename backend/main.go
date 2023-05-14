@@ -12,6 +12,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// hello
+
 func main() {
 
 	cgf := config.LoadConFig(".")
