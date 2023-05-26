@@ -7,6 +7,8 @@ export interface PostInterface {
   Detail: string;
   categoryID: number;
   category: CategoryInterface;
+  lat: string;
+  lng: string;
 }
 
 
@@ -24,5 +26,7 @@ export interface PostAllInterface {
   user: {
     profileURL: string,
   }
+  lat: string;
+  lng: string;
 }
 

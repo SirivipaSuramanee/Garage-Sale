@@ -38,7 +38,7 @@ export default function IconLabelTabs() {
       .then((response) => response.json())
 
       .then((res) => {
-        console.log(res.data);
+
         if (res.data) {
           setCategory(res.data);
         } else {
@@ -69,14 +69,14 @@ export default function IconLabelTabs() {
             aria-label="icon label tabs example"
             
           >
-            <Tab icon={<HomeIcon />} label="HOME" />
+            <Tab  icon={<HomeIcon />} label="HOME" />
            {token && <Tab icon={<AddBusinessIcon />} label="POST" />} 
             {/* <Tab icon={<FavoriteIcon />} label="FAVORITES" />
             <Tab icon={<PersonPinIcon />} label="NEARBY" /> */}
           </Tabs>
 
-          {category.map((item: CategoryInterface) =>  (
-            <Category Data={item} />
+          {value === 0 && category.map((item: CategoryInterface) =>  (
+            <Category key={item.ID} Data={item} />
           )
 
           )}

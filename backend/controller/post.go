@@ -36,6 +36,8 @@ func (h *HandlerFunc) CreatePost() gin.HandlerFunc {
 			DayTimeClose: post.DayTimeClose,
 			Detail:       post.Detail,
 			User:         user,
+			Lat:          post.Lat,
+			Lng:          post.Lng,
 		}
 
 		if err := h.pgDB.Create(&CP).Error; err != nil {
@@ -83,6 +85,8 @@ func (h *HandlerFunc) GetAllPost(c *gin.Context) {
 			DayTimeClose: post.DayTimeClose,
 			Detail:       post.Detail,
 			User:         post.User,
+			Lat:          post.Lat,
+			Lng:          post.Lng,
 			Category: entity.CategoryPostResponse{
 				ID:   map_category.Category.ID,
 				Name: map_category.Category.Name,

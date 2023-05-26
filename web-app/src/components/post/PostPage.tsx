@@ -28,7 +28,7 @@ export default function PostPage() {
       .then((response) => response.json())
 
       .then((res) => {
-        console.log(res.data);
+
         if (res.data) {
           SetPost(res.data);
         } else {
@@ -39,13 +39,18 @@ export default function PostPage() {
 
   return (
   <>
+  {post.length == 0 && 
+  <>
+    <p className="is_no_post">no content</p>
+  </>
+  }
   {
     post.map((item:PostAllInterface) => (
       <>
       <Post 
+      key={item.ID}
       Data={item}
-      ></Post> 
-     
+      />
       </>
     ))
   }

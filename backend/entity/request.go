@@ -16,4 +16,6 @@ type PostRequest struct {
 	Detail       string    `json:"detail"`
 	Email        string    `json:"email"`
 	CategoryID   *uint     `json:"categoryID"`
+	Lat          string    `json:"lat"`
+	Lng          string    `json:"lng"`
 }

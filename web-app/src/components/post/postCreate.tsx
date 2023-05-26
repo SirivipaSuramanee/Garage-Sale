@@ -20,7 +20,10 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from "dayjs";
+import MapPin from "../maps/pin";
+import Drawer from "@mui/material/Drawer";
+import Dialog from "@mui/material/Dialog";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -35,9 +38,10 @@ function PostCreate() {
   const [category, setCategory] = useState<CategoryInterface[]>([]);
   const [success, setSuccess] = useState(false); //จะยังไม่ให้แสดงบันทึกข้อมูล
   const [error, setError] = useState(false);
-  const [OpenTime, setOpenTime] = useState<Dayjs | null>(dayjs(new Date));
-  const [CloseTime, setCloseTime] = useState<Dayjs | null>(dayjs(new Date));
+  const [OpenTime, setOpenTime] = useState<Dayjs | null>(dayjs(new Date()));
+  const [CloseTime, setCloseTime] = useState<Dayjs | null>(dayjs(new Date()));
   const [errorMessage, setErrorMessage] = useState("");
+  const [onPinMap, setOnPinMap] = useState(false);
 
   const handleInputChange = (
     event: React.ChangeEvent<{ id?: string; value: any }> //ชื่อคอมลัมน์คือ id และค่าที่จะเอามาใส่ไว้ในคอมลัมน์นั้นคือ value
@@ -51,8 +55,7 @@ function PostCreate() {
 
   const handleChange = (event: SelectChangeEvent<String>) => {
     const name = event.target.name as keyof typeof post; //
-    console.log("name", event.target.name);
-    console.log("value", event.target.value);
+    
 
     const { value } = event.target;
 
@@ -72,7 +75,7 @@ function PostCreate() {
 
     reason?: string
   ) => {
-    console.log(reason);
+
     if (reason === "clickaway") {
       return;
     }
@@ -82,9 +85,9 @@ function PostCreate() {
     setError(false);
   };
 
-
   function submit() {
-    const formData = new FormData(); 
+
+    const formData = new FormData();
     if (post.Picture) {
       formData.append("img", post.Picture);
       const apiUrl = "http://localhost:8080/upload";
@@ -96,17 +99,17 @@ function PostCreate() {
 
         body: formData,
       };
-    
+     
       fetch(apiUrl, requestOptions)
         .then((response) => response.json())
         .then((res) => {
           if (res.data) {
-            PostSavePost(res.data)
+            PostSavePost(res.data);
           } else {
             setError(true);
             setErrorMessage(res.error);
           }
-          console.log(res);
+
         });
     }
   }
@@ -122,39 +125,41 @@ function PostCreate() {
     const data = {
       topic: post.Topic ?? "",
       price: Number(post.Price) ?? 0,
-      picture: picURL ?? "", 
+      picture: picURL ?? "",
       dayTimeOpen: OpenTime?.toISOString(),
       dayTimeClose: CloseTime?.toISOString(),
       detail: post.Detail ?? "",
       categoryID: Number(post.categoryID) ?? 0,
-      email: localStorage.getItem("email")
-    }
-    
+      email: localStorage.getItem("email"),
+      lat: String(post.lat) ?? "",
+      lng: String(post.lng) ?? "",
+    };
     const requestOptions = {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     };
 
-    console.log(data)
-  
+
+
     const apiUrl = "http://localhost:8080/postCreate";
 
-    fetch(apiUrl , requestOptions)
-    .then((response) => response.json())
-    .then((res) => {
-      if (res.data){
-        setSuccess(true);
-      }else{
-        setError(true);
-        setErrorMessage(res.error);
-      }
-     
-    })
-  }
+    fetch(apiUrl, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res == "posted") {
+          setSuccess(true);
+          setPost({})
+          
+        } else {
+          setError(true);
+          setErrorMessage(res.error);
+        }
+      });
+  };
   const GetAllCategory = async () => {
     const apiUrl = "http://localhost:8080/category";
 
@@ -162,7 +167,7 @@ function PostCreate() {
       .then((response) => response.json())
 
       .then((res) => {
-        console.log(res.data);
+
         if (res.data) {
           setCategory(res.data);
         } else {
@@ -170,17 +175,46 @@ function PostCreate() {
         }
       });
   };
+  
   useEffect(() => {
     //ทำงานทุกครั้งที่เรารีเฟชหน้าจอ
     //ไม่ให้รันแบบอินฟินิตี้ลูป
     GetAllCategory();
   }, []);
+
+ 
   const ClearImage = () => {
     setPost({ ...post, ["Picture" as keyof typeof post]: undefined });
   };
 
   return (
     <>
+      <Dialog
+        open={onPinMap}
+        onClose={(_, r) => {
+          if (r === "backdropClick") setOnPinMap(false);
+        }}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <MapPin 
+        closeMap={
+          () => {
+            setOnPinMap(false)
+          }
+        }
+        setLatLng={
+          (lat,lng)=>{
+            setPost((prevPost) => ({
+              ...prevPost,
+              ["lat" as keyof typeof post]: lat,
+              ["lng" as keyof typeof post]: lng,
+            }));
+          }
+        }
+        ></MapPin>
+      </Dialog>
+
       <Snackbar
         id="success"
         open={success}
@@ -236,7 +270,7 @@ function PostCreate() {
                     variant="outlined"
                     type="string"
                     size="medium"
-                    placeholder="wsdas"
+                    placeholder="กรุณากรอกหัวข้อ"
                     value={post.Topic || ""}
                     onChange={handleInputChange}
                   />
@@ -287,7 +321,7 @@ function PostCreate() {
                     variant="outlined"
                     type="string"
                     size="medium"
-                    placeholder="wsdas"
+                    placeholder="กรุณากรอกรายละเอียดเพิ่มเติม เช่น สภาพการใช้งาน เบอร์โทรติดต่อ และอื่น ๆ เป็นต้น"
                     value={post.Detail || ""}
                     onChange={handleInputChange}
                   />
@@ -307,11 +341,12 @@ function PostCreate() {
 
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DateTimePicker"]}>
-                      <DateTimePicker 
-                      value={OpenTime}
-                      onChange={(value) => {
-                        setOpenTime(value);
-                      }} />
+                      <DateTimePicker
+                        value={OpenTime}
+                        onChange={(value) => {
+                          setOpenTime(value);
+                        }}
+                      />
                     </DemoContainer>
                   </LocalizationProvider>
                 </FormControl>
@@ -329,11 +364,12 @@ function PostCreate() {
 
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DateTimePicker"]}>
-                      <DateTimePicker 
+                      <DateTimePicker
                         value={CloseTime}
-                      onChange={(value) => {
-                        setCloseTime(value);
-                      }} />
+                        onChange={(value) => {
+                          setCloseTime(value);
+                        }}
+                      />
                     </DemoContainer>
                   </LocalizationProvider>
                 </FormControl>
@@ -384,20 +420,13 @@ function PostCreate() {
                 >
                   ที่อยู่
                 </Typography>
-                <Button>ปักหมุด📍</Button>
-              </Grid>
-              <Grid item xs={6}>
-              <FormControl fullWidth variant="outlined">
-                  <TextField
-                    id="Price"
-                    variant="outlined"
-                    type="number"
-                    size="medium"
-                    placeholder="ราคา"
-                    value={post.Price || ""}
-                    onChange={handleInputChange}
-                  />
-                </FormControl>
+                <Button
+                  onClick={() => {
+                    setOnPinMap(true);
+                  }}
+                >
+                  {post.lat ? "ปักหมุด📍(ปักหมุดแล้ว)" : "ปักหมุด📍"}
+                </Button>
               </Grid>
             </Grid>
             <br />

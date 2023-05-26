@@ -11,6 +11,8 @@ type PostRespone struct {
 	Detail       string               `json:"detail"`
 	Category     CategoryPostResponse `json:"category"`
 	User         User                 `json:"user"`
+	Lat          string               `json:"lat"`
+	Lng          string               `json:"lng"`
 }
 
 type UserPostResponse struct {

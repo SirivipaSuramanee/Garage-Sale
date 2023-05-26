@@ -41,6 +41,8 @@ type Post struct {
 	DayTimeOpen  time.Time `json:"dayTimeOpen"`
 	DayTimeClose time.Time `json:"dayTimeClose"`
 	Detail       string    `json:"detail"`
+	Lat          string    `json:"lat"`
+	Lng          string    `json:"lng"`
 
 	UserID *uint `json:"userID"`
 	User   User  `gorm:"references:id" json:"user"`

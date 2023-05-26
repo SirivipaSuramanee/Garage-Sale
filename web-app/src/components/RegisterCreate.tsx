@@ -41,7 +41,7 @@ function RegisterCreate() {
 
     reason?: string
   ) => {
-    console.log(reason);
+
     if (reason === "clickaway") {
       return;
     }
@@ -56,11 +56,9 @@ function RegisterCreate() {
     }
   };
 
-
-
   function submit() {
-    const formData = new FormData(); 
-  
+    const formData = new FormData();
+
     if (img) {
       formData.append("img", img);
       const apiUrl = "http://localhost:8080/upload";
@@ -72,7 +70,7 @@ function RegisterCreate() {
 
         body: formData,
       };
-    
+
       fetch(apiUrl, requestOptions)
         .then((response) => response.json())
         .then((res) => {
@@ -85,36 +83,38 @@ function RegisterCreate() {
               email: register.Email ?? "",
               userName: register.UserName ?? "",
               password: register.Password ?? "",
-              profileURL: res.data
+              profileURL: res.data,
             };
-        
+
             const apiUrl = "http://localhost:8080/registerCreate";
             const requestOptions = {
               method: "POST",
               body: JSON.stringify(data),
             };
-        
+            var ok = false;
             fetch(apiUrl, requestOptions)
               .then((response) => response.json())
               .then((res) => {
                 if (res.msg) {
                   setSuccess(true);
+                  ok = true
                 } else {
                   setError(true);
                   setErrorMessage(res.error);
                 }
+              })
+              .finally(() => {
+
+                if(ok){
+                  window.location.href = "/login";
+                }
               });
-           
           } else {
             setError(true);
             setErrorMessage(res.error);
           }
-          console.log(res);
         });
     }
-
-    
-    
   }
   return (
     <>
@@ -260,16 +260,20 @@ function RegisterCreate() {
               <Grid item xs={6}>
                 <h2>อัพโหลดรูป:</h2>
                 <input type="file" onChange={handleChange} />
-              
               </Grid>
               <Grid item xs={6}>
                 <h2>preview</h2>
-                {
-                !img  ? 
-                 <img src="https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg" style={{ height: 200,width: 200  }}/> :
-                 <img src={URL.createObjectURL(img)} style={{ height: 200, width: 200 , objectFit: "cover"}} />
-                }
-                
+                {!img ? (
+                  <img
+                    src="https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg"
+                    style={{ height: 200, width: 200 }}
+                  />
+                ) : (
+                  <img
+                    src={URL.createObjectURL(img)}
+                    style={{ height: 200, width: 200, objectFit: "cover" }}
+                  />
+                )}
               </Grid>
             </Grid>
             <Divider />

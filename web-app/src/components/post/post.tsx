@@ -12,25 +12,40 @@ import { PostAllInterface } from "../../models/IPost";
 import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
 
-import { red } from '@mui/material/colors';
+
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import dayjs from "dayjs";
+import Dialog from "@mui/material/Dialog";
+import PostLocation from "../maps/postLocation";
+import { formatDateTime } from "../util/format";
 
 
 
-type Dataprops = {
+type props = {
   Data: PostAllInterface;
 };
 
-export function Post(prop:Dataprops ) {
+export function Post({Data}:props ) {
   
   const [favorites, setFavorites] = useState("inherit");
+  const [onLocation,setOnLocation]= useState(false);
+
  
   
   return (
-
+    <>
+    <Dialog
+    open={onLocation}
+    >
+      <PostLocation
+      Data={Data}
+      setOffLocation={
+        ()=>setOnLocation(false)
+      }
+      />
+    </Dialog>
       <Card 
         component="div"
         sx={{
@@ -46,7 +61,7 @@ export function Post(prop:Dataprops ) {
       >
          <CardHeader
         avatar={
-          <Avatar alt={String(prop.Data.ID)} src={prop.Data.user.profileURL}>
+          <Avatar alt={String(Data.ID)} src={Data.user.profileURL}>
             
           </Avatar>
         }
@@ -55,27 +70,24 @@ export function Post(prop:Dataprops ) {
             <MoreVertIcon />
           </IconButton>
         }
-        title={prop.Data.topic}
+        title={Data.topic}
         
-        subheader={dayjs(prop.Data.CreatedAt).format('DD MMM, YYYY')}
+        subheader={dayjs(Data.CreatedAt).format('DD MMM, YYYY')}
       />
         <CardMedia
         component="img"
         className="css-o69gx8-MuiCardMedia-root"
         
-        image={prop.Data.picture}
+        image={Data.picture}
         alt="Paella dish"
       />
         <CardContent>
-        <Typography variant="h6" >
-        ราคา: {prop.Data.price} บาท
-        </Typography>
         <br />
         <Typography variant="body1" sx={{ textAlign: "start"}}>
-        {prop.Data.detail}
+        {Data.detail}
         </Typography>
         </CardContent> 
-       <Typography variant="body1" sx={{ textAlign: "start"}}>เวลาเปิดบ้าน: {dayjs(prop.Data.dayTimeOpen).format('DD MMM, YYYY')} ถึง {dayjs(prop.Data.dayTimeClose).format('DD MMM, YYYY')}</Typography>
+       <Typography variant="body1" sx={{ textAlign: "start"}}>เวลาเปิดบ้าน: {formatDateTime(Data.dayTimeOpen)} ถึง {formatDateTime(Data.dayTimeClose)}</Typography>
      
        <CardActions>
         <IconButton aria-label="add to favorites" onClick={() => {
@@ -87,12 +99,15 @@ export function Post(prop:Dataprops ) {
         }}>
           <FavoriteIcon sx={{ color: favorites}} />
         </IconButton>
-        <IconButton aria-label="add to location" >
+        <IconButton aria-label="add to location"
+        onClick={()=>
+        setOnLocation(true)}>
            <LocationOnIcon/>
         </IconButton>
        
        </CardActions>
       </Card >
+      </>
   
   );
 }

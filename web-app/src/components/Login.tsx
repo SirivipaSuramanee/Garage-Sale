@@ -31,15 +31,14 @@ export default function Login() {
     const { value } = event.target;
 
     setRegister({ ...register, [id]: value });
-    console.log(value);
+
   };
 
   const handleChange = (
     event: React.ChangeEvent<{ name?: string; value: any }> //ชื่อคอมลัมน์คือ name และค่าที่จะเอามาใส่ไว้ในคอมลัมน์นั้นคือ value
   ) => {
     const name = event.target.name as keyof typeof register; //
-    console.log("name", event.target.name);
-    console.log("value", event.target.value);
+  
 
     const { value } = event.target;
 
