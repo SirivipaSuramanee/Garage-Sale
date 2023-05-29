@@ -20,6 +20,7 @@ import dayjs from "dayjs";
 import Dialog from "@mui/material/Dialog";
 import PostLocation from "../maps/postLocation";
 import { formatDateTime } from "../util/format";
+import { CategoryInterface } from "../../models/ICategory";
 
 
 
@@ -60,6 +61,7 @@ export function Post({Data}:props ) {
         }}
       >
          <CardHeader
+         className="topic"
         avatar={
           <Avatar alt={String(Data.ID)} src={Data.user.profileURL}>
             
@@ -82,6 +84,13 @@ export function Post({Data}:props ) {
         alt="Paella dish"
       />
         <CardContent>
+        <Typography
+        variant="body2"
+        >หมวดหมู่: {" "}
+          {Data.category.map((item:CategoryInterface) => (
+            <span className="tag">{item.name}</span>
+          ))}
+          </Typography>
         <br />
         <Typography variant="body1" sx={{ textAlign: "start"}}>
         {Data.detail}

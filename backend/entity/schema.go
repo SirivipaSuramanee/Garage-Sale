@@ -26,8 +26,16 @@ type Category struct {
 }
 
 type MapPostCategory struct {
-	CategoryID *uint    `json:"categoryID"`
+	CategoryID *uint      `json:"categoryID"`
 	Category   Category `gorm:"references:id" json:"category"`
+
+	PostID *uint `json:"PostID"`
+	Post   Post  `gorm:"references:id" json:"post"`
+}
+
+type MapPostCategoryQ struct {
+	CategoryID *uint      `json:"categoryID"`
+	Category   []Category `gorm:"references:id" json:"category"`
 
 	PostID *uint `json:"PostID"`
 	Post   Post  `gorm:"references:id" json:"post"`

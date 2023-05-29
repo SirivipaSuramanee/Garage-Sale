@@ -30,6 +30,7 @@ export default function PostPage() {
       .then((res) => {
 
         if (res.data) {
+          console.log(res.data)
           SetPost(res.data);
         } else {
           console.log(res.err);
@@ -38,7 +39,7 @@ export default function PostPage() {
   };
 
   return (
-  <>
+  <div className="postPage">
   {post.length == 0 && 
   <>
     <p className="is_no_post">no content</p>
@@ -54,7 +55,7 @@ export default function PostPage() {
       </>
     ))
   }
-  </>
+  </div>
   )
 
 }

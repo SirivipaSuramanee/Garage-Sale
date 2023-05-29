@@ -8,14 +8,19 @@ import (
 
 type PostRequest struct {
 	gorm.Model
-	Topic        string    `json:"topic"`
-	Price        int       `json:"price"`
-	Picture      string    `json:"picture"`
-	DayTimeOpen  time.Time `json:"dayTimeOpen"`
-	DayTimeClose time.Time `json:"dayTimeClose"`
-	Detail       string    `json:"detail"`
-	Email        string    `json:"email"`
-	CategoryID   *uint     `json:"categoryID"`
-	Lat          string    `json:"lat"`
-	Lng          string    `json:"lng"`
+	Topic        string            `json:"topic"`
+	Price        int               `json:"price"`
+	Picture      string            `json:"picture"`
+	DayTimeOpen  time.Time         `json:"dayTimeOpen"`
+	DayTimeClose time.Time         `json:"dayTimeClose"`
+	Detail       string            `json:"detail"`
+	Email        string            `json:"email"`
+	Category     []CategoryRequest `json:"category"`
+	Lat          string            `json:"lat"`
+	Lng          string            `json:"lng"`
+}
+
+type CategoryRequest struct {
+	gorm.Model
+	Name string `json:"name"`
 }

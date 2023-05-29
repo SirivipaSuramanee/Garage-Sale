@@ -6,7 +6,7 @@ export interface PostInterface {
   Picture: File; //###############
   Detail: string;
   categoryID: number;
-  category: CategoryInterface;
+  category: CategoryInterface[];
   lat: string;
   lng: string;
 }
@@ -21,8 +21,7 @@ export interface PostAllInterface {
   dayTimeOpen: Date;
   dayTimeClose: Date;
   detail: string;
-  categoryID: number;
-  category: CategoryInterface;
+  category: CategoryInterface[];
   user: {
     profileURL: string,
   }

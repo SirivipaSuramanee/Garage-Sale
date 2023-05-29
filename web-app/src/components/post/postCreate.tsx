@@ -24,6 +24,7 @@ import dayjs, { Dayjs } from "dayjs";
 import MapPin from "../maps/pin";
 import Drawer from "@mui/material/Drawer";
 import Dialog from "@mui/material/Dialog";
+import CheckboxesTags from "./component/Checkboxes";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -86,7 +87,6 @@ function PostCreate() {
   };
 
   function submit() {
-
     const formData = new FormData();
     if (post.Picture) {
       formData.append("img", post.Picture);
@@ -133,6 +133,7 @@ function PostCreate() {
       email: localStorage.getItem("email"),
       lat: String(post.lat) ?? "",
       lng: String(post.lng) ?? "",
+      category: post.category
     };
     const requestOptions = {
       method: "POST",
@@ -150,6 +151,7 @@ function PostCreate() {
     fetch(apiUrl, requestOptions)
       .then((response) => response.json())
       .then((res) => {
+        console.log(res);
         if (res == "posted") {
           setSuccess(true);
           setPost({})
@@ -237,7 +239,7 @@ function PostCreate() {
         </Alert>
       </Snackbar>
 
-      <Paper>
+      <Paper  style={{textAlign:"center"}}>
         <Box
           display="flex"
           sx={{
@@ -286,8 +288,14 @@ function PostCreate() {
                 >
                   หมวดหมู่
                 </Typography>
+                <CheckboxesTags
+                Data={category}
+                setCategory={(value) =>
+                  setPost({ ...post, ["category" as keyof typeof post]: value })
+                }
+                />
 
-                <FormControl fullWidth variant="outlined">
+                {/* <FormControl fullWidth variant="outlined">
                   <Select
                     native
                     value={String(post.categoryID) || ""}
@@ -303,7 +311,7 @@ function PostCreate() {
                       </option>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
 
               <Grid item xs={12}>
@@ -431,7 +439,7 @@ function PostCreate() {
             </Grid>
             <br />
             <Divider />
-            <Button onClick={submit}>SUBMIT</Button>
+            <Button  onClick={submit}>SUBMIT</Button>
           </Box>
         </Box>
       </Paper>

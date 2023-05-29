@@ -1,6 +1,7 @@
-.App {
-  text-align: center;
-}
+/* .App {
+  height: 100vh;
+  overflow: hidden;
+} */
 
 .is_no_post{
  margin-top: 10px;
@@ -115,4 +116,19 @@
   width: fit-content;
   word-break: break-word;
   border: 0;
+}
+.topic{
+  text-align: center;
+}
+/* .postPage{
+  height: 80vh;
+  padding-bottom: 100px;
+  overflow: scroll;
+} */
+
+.tag{
+  background-color: red;
+  border-radius: 10px;
+  margin-right: 2px;
+  padding: 5px;
 }
