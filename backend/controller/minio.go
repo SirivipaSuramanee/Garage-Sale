@@ -3,6 +3,7 @@ package controller
 import (
 	"mime/multipart"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/SirivipaSuramanee/config"
@@ -46,6 +47,35 @@ func (h *HandlerFunc) UploadPicture() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, gin.H{"data": result.Location})
+	}
+}
+
+func (h *HandlerFunc) UploadPictures() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		lenStr := ctx.Query("len")
+		len, err := strconv.Atoi(lenStr)
+		var imgUrl []string
+		for i := 0; i < len; i++ {
+			img, _ := ctx.FormFile("img1")
+			if err != nil {
+				ctx.JSON(http.StatusBadRequest, err.Error())
+				return
+			}
+			file, _ := img.Open()
+			contentType := img.Header.Get("Content-Type")
+
+			fileName := time.Now().Format("01-02-2006-15:04") + img.Filename
+
+			result, err := UploadPictureRopository(h.minio, ctx, contentType, file, h.cgf.StorageBucketName, fileName)
+
+			imgUrl = append(imgUrl, result.Location)
+			if err != nil {
+				ctx.JSON(http.StatusBadRequest, err)
+				return
+			}
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{"data": imgUrl})
 	}
 }
 

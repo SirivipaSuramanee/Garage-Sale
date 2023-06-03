@@ -64,11 +64,13 @@ function PostCreate() {
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let file;
+    const files: File[] = [];
     if (event.target.files && event.target.files.length > 0) {
-      file = event.target.files[0];
+      for (let index = 0; index < event.target.files.length; index++) {
+        files.push(event.target.files[index]);
+      }
     }
-    setPost({ ...post, ["Picture" as keyof typeof post]: file });
+    setPost({ ...post, ["Picture" as keyof typeof post]: files });
   };
 
   const handleClose = (
@@ -89,17 +91,20 @@ function PostCreate() {
   function submit() {
     const formData = new FormData();
     if (post.Picture) {
-      formData.append("img", post.Picture);
-      const apiUrl = "http://localhost:8080/upload";
+      post.Picture.forEach((value,index)=> {
+        formData.append(`img${index+1}`, value);
+      }) 
+
+      const apiUrl = `http://localhost:8080/uploads?len=${post.Picture.length.toString()}`;
       const requestOptions = {
         method: "POST", //เอาข้อมูลไปเก็บไว้ในดาต้าเบส
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
         },
-
         body: formData,
       };
-     
+
+     console.log(requestOptions)
       fetch(apiUrl, requestOptions)
         .then((response) => response.json())
         .then((res) => {
@@ -121,7 +126,7 @@ function PostCreate() {
     },
   };
 
-  const PostSavePost = async (picURL: string) => {
+  const PostSavePost = async (picURL: string[]) => {
     const data = {
       topic: post.Topic ?? "",
       price: Number(post.Price) ?? 0,
@@ -396,16 +401,24 @@ function PostCreate() {
                 <input
                   type="file"
                   accept="image/*"
+                  multiple={true}
                   onChange={handleImageChange}
                 />
                 {post.Picture && (
                   <>
                     <Grid item xs={12}>
-                      <img
-                        src={URL.createObjectURL(post.Picture)}
+                      {/* <img
+                        src={URL.createObjectURL(post.Picture[0])}
                         alt=""
                         style={{ height: 200 }}
+                      /> */}
+                      {post.Picture.map((item) => (
+                        <img
+                        src={URL.createObjectURL(item)}
+                        alt={item.name}
+                        style={{ height: 200 }}
                       />
+                      ))}
                     </Grid>
                     <Grid item xs={12}>
                       <Button

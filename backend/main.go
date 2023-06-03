@@ -36,6 +36,7 @@ func main() {
 	})
 	//--------------minio---------------
 	r.POST("/upload", h.UploadPicture())
+	r.POST("/uploads", h.UploadPictures())
 
 	//--------------Login---------------
 	r.POST("/registerCreate", h.Register)

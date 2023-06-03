@@ -3,7 +3,7 @@ export interface PostInterface {
   ID: number;
   Topic: string;
   Price: number;
-  Picture: File; //###############
+  Picture: File[]; //###############
   Detail: string;
   categoryID: number;
   category: CategoryInterface[];

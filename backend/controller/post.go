@@ -18,14 +18,13 @@ func (h *HandlerFunc) CreatePost() gin.HandlerFunc {
 		}
 
 		if tx := h.pgDB.Where("email = ?", post.Email).First(&user); tx.RowsAffected == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Category not found"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "email not found"})
 			return
 		}
 
 		CP := entity.Post{
 			Topic:        post.Topic,
 			Price:        post.Price,
-			Picture:      post.Picture,
 			DayTimeOpen:  post.DayTimeOpen,
 			DayTimeClose: post.DayTimeClose,
 			Detail:       post.Detail,
@@ -37,6 +36,17 @@ func (h *HandlerFunc) CreatePost() gin.HandlerFunc {
 		if err := h.pgDB.Create(&CP).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
+		}
+
+		for _, i := range post.Picture {
+			img := entity.Img{
+				Url:  i,
+				Post: CP,
+			}
+			if err := h.pgDB.Create(&img).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
 		}
 
 		for _, i := range post.Category {
