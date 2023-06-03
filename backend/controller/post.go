@@ -76,7 +76,7 @@ func (h *HandlerFunc) GetAllPost(c *gin.Context) {
 
 	var posts []entity.Post
 	var respone []entity.PostRespone
-
+	var imgs []entity.Img
 	if err := h.pgDB.Model(&entity.Post{}).Preload("User").Find(&posts).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -97,11 +97,17 @@ func (h *HandlerFunc) GetAllPost(c *gin.Context) {
 			})
 		}
 
+		if err := h.pgDB.Model(&entity.Img{}).Where("post_id = ?", post.ID).Find(&imgs).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		
 		respone = append(respone, entity.PostRespone{
 			ID:           post.ID,
 			CreateAt:     post.CreatedAt,
 			Topic:        post.Topic,
-			Picture:      post.Picture,
+			Picture:      imgs,
 			DayTimeOpen:  post.DayTimeOpen,
 			DayTimeClose: post.DayTimeClose,
 			Detail:       post.Detail,

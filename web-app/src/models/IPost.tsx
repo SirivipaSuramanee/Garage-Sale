@@ -17,7 +17,11 @@ export interface PostAllInterface {
   CreatedAt: Date;
   topic: string;
   price: number;
-  picture: string; //###############
+  picture: [{
+    ID: number,
+    Url
+: string,
+  }]; //###############
   dayTimeOpen: Date;
   dayTimeClose: Date;
   detail: string;

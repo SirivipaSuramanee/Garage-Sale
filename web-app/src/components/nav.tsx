@@ -51,7 +51,7 @@ export default function Nav() {
     setAnchorElUser(null);
   };
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 ,display: "sticky"}}>
       <AppBar color="primary" position="sticky">
         <Toolbar>
           <IconButton

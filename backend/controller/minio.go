@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"mime/multipart"
 	"net/http"
 	"strconv"
@@ -56,7 +57,7 @@ func (h *HandlerFunc) UploadPictures() gin.HandlerFunc {
 		len, err := strconv.Atoi(lenStr)
 		var imgUrl []string
 		for i := 0; i < len; i++ {
-			img, _ := ctx.FormFile("img1")
+			img, _ := ctx.FormFile(fmt.Sprintf("img%d", i+1))
 			if err != nil {
 				ctx.JSON(http.StatusBadRequest, err.Error())
 				return

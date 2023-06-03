@@ -6,7 +6,7 @@ type PostRespone struct {
 	ID           uint                   `json:"id"`
 	CreateAt     time.Time              `json:"CreatedAt"`
 	Topic        string                 `json:"topic"`
-	Picture      string                 `json:"picture"` //###############
+	Picture      []Img                  `json:"picture"`
 	DayTimeOpen  time.Time              `json:"dayTimeOpen"`
 	DayTimeClose time.Time              `json:"dayTimeClose"`
 	Detail       string                 `json:"detail"`

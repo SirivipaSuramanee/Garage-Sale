@@ -1,7 +1,6 @@
-/* .App {
+.App {
   height: 100vh;
-  overflow: hidden;
-} */
+}
 
 .is_no_post{
  margin-top: 10px;
@@ -120,11 +119,11 @@
 .topic{
   text-align: center;
 }
-/* .postPage{
+.postPage{
   height: 80vh;
   padding-bottom: 100px;
   overflow: scroll;
-} */
+}
 
 .tag{
   background-color: red;
