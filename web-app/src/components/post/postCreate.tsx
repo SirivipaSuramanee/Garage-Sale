@@ -300,23 +300,6 @@ function PostCreate() {
                 }
                 />
 
-                {/* <FormControl fullWidth variant="outlined">
-                  <Select
-                    native
-                    value={String(post.categoryID) || ""}
-                    inputProps={{
-                      name: "categoryID", //เอาไว้เข้าถึงข้อมูล
-                    }}
-                    onChange={handleChange}
-                  >
-                    <option>none</option>
-                    {category.map((item: CategoryInterface) => (
-                      <option value={item.ID} key={item.ID}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl> */}
               </Grid>
 
               <Grid item xs={12}>

@@ -57,7 +57,7 @@ export default function IconLabelTabs() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
+if (token)
   return (
     <>
       <CssBaseline />
@@ -69,24 +69,39 @@ export default function IconLabelTabs() {
             aria-label="icon label tabs example"
             
           >
-            <Tab  icon={<HomeIcon />} label="HOME" />
-           {token && <Tab icon={<AddBusinessIcon />} label="POST" />} 
-            {/* <Tab icon={<FavoriteIcon />} label="FAVORITES" />
-            <Tab icon={<PersonPinIcon />} label="NEARBY" /> */}
+            <Tab  icon={<HomeIcon />} label="หน้าหลัก" />
+            <Tab icon={<AddBusinessIcon />} label="สร้างโพสต์" /> 
+            <Tab icon={<AddBusinessIcon />} label="โฟสต์ของฉัน" />
+            <Tab icon={<AddBusinessIcon />} label="โพสต์ที่สนใจ" />
           </Tabs>
 
           {value === 0 && category.map((item: CategoryInterface) =>  (
             <Category key={item.ID} Data={item} />
           )
-
           )}
-          
-       {value === 0 &&  <PostPage />}
-       {value === 1 && <PostCreate />}
-       
+       {value === 0 &&  <PostPage value={value}/>}
+       {value === 1 &&  <PostCreate />}
+       {value === 2 &&  <PostPage value={value}/>}
+        </Box>
+      </Container>
+    </>
+  );
 
-        
-         
+  return (
+    <>
+      <CssBaseline />
+      <Container maxWidth="md">
+        <Box sx={{ bgcolor: "#E0FFFF", padding: 1 }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="icon label tabs example"
+          >
+            <Tab  icon={<HomeIcon />} label="หน้าหลัก" />
+          </Tabs>
+
+         <PostPage value={value}/>
+      
         </Box>
       </Container>
     </>

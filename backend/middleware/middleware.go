@@ -1,6 +1,11 @@
 package middleware
 
-import "github.com/gin-gonic/gin"
+import (
+	"strings"
+
+	"github.com/SirivipaSuramanee/service"
+	"github.com/gin-gonic/gin"
+)
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -12,6 +17,17 @@ func CORSMiddleware() gin.HandlerFunc {
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
 			return
+		}
+
+		clientToken := c.Request.Header.Get("Authorization")
+		if clientToken != "" {
+			extractedToken := strings.Split(clientToken, "Bearer ")
+
+			if len(extractedToken) == 2 {
+				clientToken = strings.TrimSpace(extractedToken[1])
+				claims := service.GetClaims(clientToken)
+				c.Set("userId", claims.Id)
+			}
 		}
 
 		c.Next()

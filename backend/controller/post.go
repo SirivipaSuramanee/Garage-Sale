@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/SirivipaSuramanee/entity"
@@ -77,9 +78,18 @@ func (h *HandlerFunc) GetAllPost(c *gin.Context) {
 	var posts []entity.Post
 	var respone []entity.PostRespone
 	var imgs []entity.Img
-	if err := h.pgDB.Model(&entity.Post{}).Preload("User").Find(&posts).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	userId, ok := c.Get("userId")
+	fmt.Printf("ok: %v\n", ok)
+	if ok {
+		if err := h.pgDB.Model(&entity.Post{}).Where("user_id = ?", userId).Preload("User").Find(&posts).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+	} else {
+		if err := h.pgDB.Model(&entity.Post{}).Preload("User").Find(&posts).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 	}
 
 	for _, post := range posts {
@@ -102,7 +112,6 @@ func (h *HandlerFunc) GetAllPost(c *gin.Context) {
 			return
 		}
 
-		
 		respone = append(respone, entity.PostRespone{
 			ID:           post.ID,
 			CreateAt:     post.CreatedAt,

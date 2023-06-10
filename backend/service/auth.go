@@ -22,6 +22,7 @@ type JwtWrapper struct {
 
 // JwtClaim adds email as a claim to the token
 type JwtClaim struct {
+	Id    int
 	Email string
 	jwt.StandardClaims
 }
@@ -29,8 +30,9 @@ type JwtClaim struct {
 // เรียกมาจากตรงนี้
 // Generate Token generates a jwt token
 // รับ email เข้ามา Generate แล้วส่งกลับเป็น token
-func (j *JwtWrapper) GenerateToken(email string) (signedToken string, err error) {
+func (j *JwtWrapper) GenerateToken(email string, id int) (signedToken string, err error) {
 	claims := &JwtClaim{
+		Id:    id,
 		Email: email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(j.ExpirationHours)).Unix(),
@@ -75,4 +77,14 @@ func (j *JwtWrapper) ValidateToken(signedToken string) (claims *JwtClaim, err er
 
 	return
 
+}
+
+func GetClaims(tokenString string) *JwtClaim {
+	parser := jwt.Parser{}
+	var claim JwtClaim
+	parser.ParseUnverified(
+		tokenString,
+		&claim,
+	)
+	return &claim
 }
