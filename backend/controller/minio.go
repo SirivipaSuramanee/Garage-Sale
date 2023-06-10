@@ -64,11 +64,8 @@ func (h *HandlerFunc) UploadPictures() gin.HandlerFunc {
 			}
 			file, _ := img.Open()
 			contentType := img.Header.Get("Content-Type")
-
-			fileName := time.Now().Format("01-02-2006-15:04") + img.Filename
-
+			fileName := fmt.Sprintf("img%d-%s-%s", i+1, time.Now().GoString(), img.Filename)
 			result, err := UploadPictureRopository(h.minio, ctx, contentType, file, h.cgf.StorageBucketName, fileName)
-
 			imgUrl = append(imgUrl, result.Location)
 			if err != nil {
 				ctx.JSON(http.StatusBadRequest, err)
