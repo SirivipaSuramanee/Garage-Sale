@@ -47,6 +47,7 @@ export default function Nav() {
     if (index === 1) {
       window.localStorage.clear();
       setToken(null);
+      window.location.href = "";
     }
     setAnchorElUser(null);
   };
