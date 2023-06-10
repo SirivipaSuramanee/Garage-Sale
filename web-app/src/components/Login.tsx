@@ -49,7 +49,6 @@ export default function Login() {
 
     reason?: string
   ) => {
-    console.log(reason);
     if (reason === "clickaway") {
       return;
     }

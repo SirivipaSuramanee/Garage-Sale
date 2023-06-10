@@ -103,8 +103,6 @@ function PostCreate() {
         },
         body: formData,
       };
-
-     console.log(requestOptions)
       fetch(apiUrl, requestOptions)
         .then((response) => response.json())
         .then((res) => {
@@ -156,7 +154,6 @@ function PostCreate() {
     fetch(apiUrl, requestOptions)
       .then((response) => response.json())
       .then((res) => {
-        console.log(res);
         if (res == "posted") {
           setSuccess(true);
           setPost({})

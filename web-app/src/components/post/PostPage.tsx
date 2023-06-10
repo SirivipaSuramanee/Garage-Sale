@@ -13,7 +13,6 @@ export default function PostPage({value}: props) {
     if (value === 2) {
       GetMyPost()
     }else{
-      console.log("GetAllPost()")
      GetAllPost();
     }
    
@@ -33,7 +32,6 @@ export default function PostPage({value}: props) {
       .then((res) => {
 
         if (res.data) {
-          console.log(res.data)
           setPost(res.data);
         } else {
           console.log(res.err);
@@ -55,7 +53,6 @@ export default function PostPage({value}: props) {
       .then((res) => {
 
         if (res.data) {
-          console.log(res.data)
           setPost(res.data);
         } else {
           console.log(res.err);
