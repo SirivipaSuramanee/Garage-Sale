@@ -194,6 +194,7 @@ func (h *HandlerFunc) GetAllFavorite() gin.HandlerFunc {
 				Lat:          post.Lat,
 				Lng:          post.Lng,
 				Category:     Categories,
+				Like:         true,
 			})
 		}
 
