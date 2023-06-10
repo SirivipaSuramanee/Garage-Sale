@@ -14,6 +14,7 @@ type PostRespone struct {
 	User         User                   `json:"user"`
 	Lat          string                 `json:"lat"`
 	Lng          string                 `json:"lng"`
+	Like         bool                   `json:"like"`
 }
 
 type UserPostResponse struct {

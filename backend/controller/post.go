@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/SirivipaSuramanee/entity"
@@ -80,12 +79,20 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 		var respone []entity.PostRespone
 
 		userId, ok := c.Get("userId")
-		fmt.Printf("ok: %v\n", ok)
 		if ok {
-			if err := h.pgDB.Model(&entity.Post{}).Where("user_id = ?", userId).Preload("User").Find(&posts).Error; err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-				return
+			condition := c.Query("condition")
+			if condition == "all" {
+				if err := h.pgDB.Model(&entity.Post{}).Preload("User").Find(&posts).Error; err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+					return
+				}
+			} else if condition == "myPost" {
+				if err := h.pgDB.Model(&entity.Post{}).Where("user_id = ?", userId).Preload("User").Find(&posts).Error; err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+					return
+				}
 			}
+
 		} else {
 			if err := h.pgDB.Model(&entity.Post{}).Preload("User").Find(&posts).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -113,6 +120,12 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 				return
 			}
+			var mpf entity.MapPostFavorite
+			like := false
+
+			if err := h.pgDB.Model(&entity.MapPostFavorite{}).Where("post_id = ? and user_id = ?", post.ID, userId).First(&mpf); err.RowsAffected != 0 {
+				like = true
+			}
 
 			respone = append(respone, entity.PostRespone{
 				ID:           post.ID,
@@ -126,6 +139,7 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 				Lat:          post.Lat,
 				Lng:          post.Lng,
 				Category:     Categories,
+				Like:         like,
 			})
 		}
 

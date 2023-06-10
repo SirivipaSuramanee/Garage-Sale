@@ -82,6 +82,7 @@ if (token)
        {value === 0 &&  <PostPage value={value}/>}
        {value === 1 &&  <PostCreate />}
        {value === 2 &&  <PostPage value={value}/>}
+       {value === 3 &&  <PostPage value={value}/>}
         </Box>
       </Container>
     </>

@@ -11,14 +11,18 @@ export default function PostPage({value}: props) {
   useEffect(() => {
     
     if (value === 2) {
-      GetMyPost()
+      GetAllPost("myPost");
+    }
+   else if (value === 3) {
+      GetMyFavorite()
     }else{
-     GetAllPost();
+     GetAllPost("all");
     }
    
   }, [value]);
-  const GetMyPost = async () => {
-    const apiUrl = `http://localhost:8080/post`;
+
+  const GetMyFavorite = async () => {
+    const apiUrl = `http://localhost:8080/favorite`;
     const requestOptions = {
       method: "GET",
       headers: {
@@ -39,11 +43,12 @@ export default function PostPage({value}: props) {
       });
   };
 
-  const GetAllPost = async () => {
-    const apiUrl = `http://localhost:8080/post`;
+  const GetAllPost = async (condition: string) => {
+    const apiUrl = `http://localhost:8080/post?condition=${condition}`;
     const requestOptions = {
       method: "GET",
-      headers: { //การยืนยันตัวตน
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
         "Content-Type": "application/json",
       },
     };

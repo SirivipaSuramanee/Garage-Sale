@@ -17,6 +17,7 @@ export interface PostAllInterface {
   CreatedAt: Date;
   topic: string;
   price: number;
+  like: boolean
   picture: [{
     ID: number,
     Url

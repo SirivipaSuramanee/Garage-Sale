@@ -84,6 +84,11 @@ export function Post({ Data }: props) {
         } 
       });
   };
+  useEffect(() => {
+    if (Data.like){
+      setFavorites("red")
+    }
+  }, []);
 
   return (
     <>
