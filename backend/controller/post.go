@@ -77,7 +77,7 @@ func (h *HandlerFunc) GetAllPost(c *gin.Context) {
 
 	var posts []entity.Post
 	var respone []entity.PostRespone
-	var imgs []entity.Img
+
 	userId, ok := c.Get("userId")
 	fmt.Printf("ok: %v\n", ok)
 	if ok {
@@ -95,6 +95,7 @@ func (h *HandlerFunc) GetAllPost(c *gin.Context) {
 	for _, post := range posts {
 		var map_category []entity.MapPostCategory
 		var Categories []entity.CategoryPostResponse
+		var imgs []entity.Img
 
 		if err := h.pgDB.Model(&entity.MapPostCategory{}).Where("post_id = ?", post.ID).Preload("Category").Find(&map_category).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
