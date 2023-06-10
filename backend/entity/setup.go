@@ -28,6 +28,7 @@ func SetupDatabase(cgf config.Config) *gorm.DB {
 		&Post{},
 		&MapPostCategory{},
 		&Img{},
+		&MapPostFavorite{},
 	)
 	fmt.Print("Connected")
 

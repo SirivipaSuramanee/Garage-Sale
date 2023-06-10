@@ -13,7 +13,7 @@ export interface PostInterface {
 
 
 export interface PostAllInterface {
-  ID: number;
+  id: number;
   CreatedAt: Date;
   topic: string;
   price: number;

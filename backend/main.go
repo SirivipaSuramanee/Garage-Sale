@@ -46,8 +46,11 @@ func main() {
 	r.GET("/category", h.GetAllCategory)
 
 	//-----------Post-----------------
+	r.GET("/favorite", h.GetAllFavorite())
+	r.POST("/favorite", h.CreateMapPostFavorite())
+	r.DELETE("/favorite", h.DeleteLikeMapPostFavorite())
 	r.POST("/postCreate", h.CreatePost())
-	r.GET("/post", h.GetAllPost)
+	r.GET("/post", h.GetAllPost())
 
 	r.Run()
 }

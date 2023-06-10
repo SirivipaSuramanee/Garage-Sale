@@ -16,7 +16,8 @@ type User struct {
 	Password   string `json:"password"`
 	ProfileURL string `json:"profileURL"`
 
-	Post []Post `gorm:"foreignKey:UserID"`
+	Post            []Post            `gorm:"foreignKey:UserID"`
+	MapPostFavorite []MapPostFavorite `gorm:"foreignKey:UserID"`
 }
 type Category struct {
 	gorm.Model
@@ -41,6 +42,14 @@ type MapPostCategoryQ struct {
 	Post   Post  `gorm:"references:id" json:"post"`
 }
 
+type MapPostFavorite struct {
+	UserID *uint `json:"userID"`
+	User   User  `gorm:"references:id" json:"user"`
+
+	PostID *uint `json:"PostID"`
+	Post   Post  `gorm:"references:id" json:"post"`
+}
+
 type Post struct {
 	gorm.Model
 	Topic        string    `json:"topic"`
@@ -57,6 +66,7 @@ type Post struct {
 
 	Img             []Img             `gorm:"foreignKey:PostID"`
 	MapPostCategory []MapPostCategory `gorm:"foreignKey:PostID"`
+	MapPostFavorite []MapPostFavorite `gorm:"foreignKey:PostID"`
 }
 
 type Img struct {

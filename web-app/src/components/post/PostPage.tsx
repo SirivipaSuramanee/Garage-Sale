@@ -71,7 +71,7 @@ export default function PostPage({value}: props) {
     post.map((item:PostAllInterface) => (
       <>
       <Post 
-      key={item.ID}
+      key={item.id}
       Data={item}
       />
       </>

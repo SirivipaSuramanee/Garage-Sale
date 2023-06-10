@@ -31,6 +31,60 @@ export function Post({ Data }: props) {
   const [favorites, setFavorites] = useState("inherit");
   const [onLocation, setOnLocation] = useState(false);
 
+  const likePost = async (id: number) => {
+    const data = {
+      postId: id,
+    };
+    console.log(data)
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+
+
+
+    const apiUrl = "http://localhost:8080/favorite";
+
+    fetch(apiUrl, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res == "like posted") {
+          console.log("like posted")
+        } 
+      });
+  };
+
+  const unlikePost = async (id: number) => {
+    const data = {
+      postId: id,
+    };
+    console.log(data)
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+
+
+
+    const apiUrl = "http://localhost:8080/favorite";
+
+    fetch(apiUrl, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res == "like posted") {
+          console.log("like posted")
+        } 
+      });
+  };
+
   return (
     <>
       <Dialog open={onLocation}>
@@ -52,7 +106,7 @@ export function Post({ Data }: props) {
         <CardHeader
           className="topic"
           avatar={
-            <Avatar alt={String(Data.ID)} src={Data.user.profileURL}></Avatar>
+            <Avatar alt={String(Data.id)} src={Data.user.profileURL}></Avatar>
           }
           action={
             <IconButton aria-label="settings">
@@ -104,7 +158,9 @@ export function Post({ Data }: props) {
             onClick={() => {
               if (favorites === "red") {
                 setFavorites("inherit");
+                unlikePost(Data.id)
               } else {
+                likePost(Data.id)
                 setFavorites("red");
               }
             }}

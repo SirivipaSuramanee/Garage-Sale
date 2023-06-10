@@ -24,3 +24,7 @@ type CategoryRequest struct {
 	gorm.Model
 	Name string `json:"name"`
 }
+
+type MapPostFavoriteRequest struct {
+	PostID int `json:"postId"`
+}

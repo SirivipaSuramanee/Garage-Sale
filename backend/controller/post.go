@@ -73,61 +73,180 @@ func (h *HandlerFunc) CreatePost() gin.HandlerFunc {
 
 }
 
-func (h *HandlerFunc) GetAllPost(c *gin.Context) {
+func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 
-	var posts []entity.Post
-	var respone []entity.PostRespone
+	return func(c *gin.Context) {
+		var posts []entity.Post
+		var respone []entity.PostRespone
 
-	userId, ok := c.Get("userId")
-	fmt.Printf("ok: %v\n", ok)
-	if ok {
-		if err := h.pgDB.Model(&entity.Post{}).Where("user_id = ?", userId).Preload("User").Find(&posts).Error; err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+		userId, ok := c.Get("userId")
+		fmt.Printf("ok: %v\n", ok)
+		if ok {
+			if err := h.pgDB.Model(&entity.Post{}).Where("user_id = ?", userId).Preload("User").Find(&posts).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+		} else {
+			if err := h.pgDB.Model(&entity.Post{}).Preload("User").Find(&posts).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
 		}
-	} else {
-		if err := h.pgDB.Model(&entity.Post{}).Preload("User").Find(&posts).Error; err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-	}
 
-	for _, post := range posts {
-		var map_category []entity.MapPostCategory
-		var Categories []entity.CategoryPostResponse
-		var imgs []entity.Img
+		for _, post := range posts {
+			var map_category []entity.MapPostCategory
+			var Categories []entity.CategoryPostResponse
+			var imgs []entity.Img
 
-		if err := h.pgDB.Model(&entity.MapPostCategory{}).Where("post_id = ?", post.ID).Preload("Category").Find(&map_category).Error; err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		for _, category := range map_category {
-			Categories = append(Categories, entity.CategoryPostResponse{
-				ID:   category.Category.ID,
-				Name: category.Category.Name,
+			if err := h.pgDB.Model(&entity.MapPostCategory{}).Where("post_id = ?", post.ID).Preload("Category").Find(&map_category).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+			for _, category := range map_category {
+				Categories = append(Categories, entity.CategoryPostResponse{
+					ID:   category.Category.ID,
+					Name: category.Category.Name,
+				})
+			}
+
+			if err := h.pgDB.Model(&entity.Img{}).Where("post_id = ?", post.ID).Find(&imgs).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+
+			respone = append(respone, entity.PostRespone{
+				ID:           post.ID,
+				CreateAt:     post.CreatedAt,
+				Topic:        post.Topic,
+				Picture:      imgs,
+				DayTimeOpen:  post.DayTimeOpen,
+				DayTimeClose: post.DayTimeClose,
+				Detail:       post.Detail,
+				User:         post.User,
+				Lat:          post.Lat,
+				Lng:          post.Lng,
+				Category:     Categories,
 			})
 		}
 
-		if err := h.pgDB.Model(&entity.Img{}).Where("post_id = ?", post.ID).Find(&imgs).Error; err != nil {
+		c.JSON(http.StatusOK, gin.H{"data": respone})
+	}
+}
+
+func (h *HandlerFunc) GetAllFavorite() gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		var respone []entity.PostRespone
+		var mapPostFavorite []entity.MapPostFavorite
+		userId, _ := c.Get("userId")
+
+		if err := h.pgDB.Model(entity.MapPostFavorite{}).Where("user_id = ?", userId).Preload("Post").Find(&mapPostFavorite).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		respone = append(respone, entity.PostRespone{
-			ID:           post.ID,
-			CreateAt:     post.CreatedAt,
-			Topic:        post.Topic,
-			Picture:      imgs,
-			DayTimeOpen:  post.DayTimeOpen,
-			DayTimeClose: post.DayTimeClose,
-			Detail:       post.Detail,
-			User:         post.User,
-			Lat:          post.Lat,
-			Lng:          post.Lng,
-			Category:     Categories,
-		})
+		for _, i := range mapPostFavorite {
+			post := i.Post
+			var map_category []entity.MapPostCategory
+			var Categories []entity.CategoryPostResponse
+			var imgs []entity.Img
+
+			if err := h.pgDB.Model(&entity.MapPostCategory{}).Where("post_id = ?", post.ID).Preload("Category").Find(&map_category).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+			for _, category := range map_category {
+				Categories = append(Categories, entity.CategoryPostResponse{
+					ID:   category.Category.ID,
+					Name: category.Category.Name,
+				})
+			}
+
+			if err := h.pgDB.Model(&entity.Img{}).Where("post_id = ?", post.ID).Find(&imgs).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+
+			respone = append(respone, entity.PostRespone{
+				ID:           post.ID,
+				CreateAt:     post.CreatedAt,
+				Topic:        post.Topic,
+				Picture:      imgs,
+				DayTimeOpen:  post.DayTimeOpen,
+				DayTimeClose: post.DayTimeClose,
+				Detail:       post.Detail,
+				User:         post.User,
+				Lat:          post.Lat,
+				Lng:          post.Lng,
+				Category:     Categories,
+			})
+		}
+
+		c.JSON(http.StatusOK, gin.H{"data": respone})
+	}
+}
+
+func (h *HandlerFunc) CreateMapPostFavorite() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var request entity.MapPostFavoriteRequest
+		var post entity.Post
+		var user entity.User
+
+		userId, ok := c.Get("userId")
+
+		if !ok {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "can't get userId"})
+			return
+		}
+
+		if err := c.BindJSON(&request); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if err := h.pgDB.Model(entity.Post{}).Where("id = ?", request.PostID).First(&post); err.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "post id not found"})
+			return
+		}
+
+		if err := h.pgDB.Model(entity.User{}).Where("id = ?", userId).First(&user); err.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "user id not found"})
+			return
+		}
+		mpf := entity.MapPostFavorite{
+			Post: post,
+			User: user,
+		}
+		if err := h.pgDB.Create(&mpf).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusCreated, "like posted")
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": respone})
+}
+
+func (h *HandlerFunc) DeleteLikeMapPostFavorite() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var request entity.MapPostFavoriteRequest
+		var mpf entity.MapPostFavorite
+		userId, ok := c.Get("userId")
+
+		if !ok {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "can't get userId"})
+			return
+		}
+		if err := c.BindJSON(&request); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if err := h.pgDB.Where("post_id = ? and user_id = ?", request.PostID, userId).Delete(&mpf).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusCreated, mpf)
+	}
 
 }
