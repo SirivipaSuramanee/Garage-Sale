@@ -55,6 +55,7 @@ func (h *HandlerFunc) UploadPictures() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		lenStr := ctx.Query("len")
 		len, err := strconv.Atoi(lenStr)
+		userId, _ := ctx.Get("userId")
 		var imgUrl []string
 		for i := 0; i < len; i++ {
 			img, _ := ctx.FormFile(fmt.Sprintf("img%d", i+1))
@@ -64,7 +65,7 @@ func (h *HandlerFunc) UploadPictures() gin.HandlerFunc {
 			}
 			file, _ := img.Open()
 			contentType := img.Header.Get("Content-Type")
-			fileName := fmt.Sprintf("img%d-%s-%s", i+1, time.Now().GoString(), img.Filename)
+			fileName := fmt.Sprintf("img%d-%s-%s-%v", i+1, time.Now().GoString(), img.Filename, userId)
 			result, err := UploadPictureRopository(h.minio, ctx, contentType, file, h.cgf.StorageBucketName, fileName)
 			imgUrl = append(imgUrl, result.Location)
 			if err != nil {
