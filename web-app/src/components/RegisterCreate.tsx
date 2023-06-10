@@ -149,31 +149,31 @@ function RegisterCreate() {
           <img
             src="https://www.immihelp.com/assets/cms/yard-sale-garage-sale-shopping-tips.jpg"
             alt=""
-            width="80%"
-            height="80%"
+            width="100%"
+            height="100%"
           />
           <Stack spacing={2} justifyContent="center" alignItems="center">
             <Box
               display="flex"
               sx={{
-                padding: 3,
+                padding: 2,
                 alignItems: "center",
 
                 textAlign: "center",
               }}
             >
-              <Typography variant="h4" color="#1976d2">
+              <Typography variant="h4" color="#1976d2" align="center">
                 Register
               </Typography>
             </Box>
 
             <Grid container spacing={4}>
-              <Grid item xs={6}>
+              <Grid item xs={6} >
                 {/* <FormControl fullWidth variant="outlined">
                   <p>Firstname</p> */}
                 <TextField
                   id="FirstName"
-                  variant="outlined"
+                  variant="outlined" 
                   label="Firstname"
                   type="string"
                   size="medium"
@@ -258,15 +258,15 @@ function RegisterCreate() {
                 {/* </FormControl> */}
               </Grid>
               <Grid item xs={6}>
-                <h2>อัพโหลดรูป:</h2>
+                <h3>อัพโหลดรูป:</h3>
                 <input type="file" onChange={handleChange} />
               </Grid>
               <Grid item xs={6}>
-                <h2>preview</h2>
+                <h3>preview</h3>
                 {!img ? (
                   <img
                     src="https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg"
-                    style={{ height: 200, width: 200 }}
+                    style={{ height: 150, width: 150 }}
                   />
                 ) : (
                   <img
