@@ -12,6 +12,7 @@ import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import React from "react";
+import { Tune } from "@mui/icons-material";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -19,20 +20,46 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 ) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
+
+
 function RegisterCreate() {
   const [register, setRegister] = useState<Partial<UserInterface>>({}); //Partial ชิ้นส่วนเอาไว้เซทข้อมูลที่ละส่วน
   const [success, setSuccess] = useState(false); //จะยังไม่ให้แสดงบันทึกข้อมูล
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [img, setImg] = useState<File>();
-
+  const [validatePassword, setValidatePassword] = useState(false);
+  const [validateFeild, setValidateFeild] = useState(true);
+  function isEmpty(str: string | undefined) {
+    if (str === "" || str == undefined){
+      return true
+    }
+    return false
+  }
+  useEffect(() => {
+    
+    if (!isEmpty(register.FirstName) && !isEmpty(register.LastName) && !isEmpty(register.Tel) && !isEmpty(register.Email)
+    && !isEmpty(register.UserName) && !isEmpty(register.Password) && img != undefined) {
+      setValidateFeild(false)
+    }else {
+      setValidateFeild(true)
+    }
+  }, [register.FirstName, img]);
   const handleInputChange = (
     event: React.ChangeEvent<{ id?: string; value: any }> //ชื่อคอมลัมน์คือ id และค่าที่จะเอามาใส่ไว้ในคอมลัมน์นั้นคือ value
   ) => {
     const id = event.target.id as keyof typeof register; //
 
     const { value } = event.target;
-
+   if (value === "" && id ==="Password") {
+    setValidatePassword(false)
+   }
+   else if (value.length < 8 && id ==="Password") {
+      setValidatePassword(true);
+    }else if (id ==="Password"){
+      setValidatePassword(false)
+    }
     setRegister({ ...register, [id]: value });
   };
 
@@ -247,10 +274,11 @@ function RegisterCreate() {
                 {/* <FormControl fullWidth variant="standard">
                   <p>Password</p> */}
                 <TextField
+                  error={validatePassword}
                   id="Password"
                   variant="outlined"
-                  label="Password"
-                  type="string"
+                  label={validatePassword ? "รหัสต้องมีความยาวมากกว่า 8 ตัว":"Password"}
+                  type="password"
                   size="medium"
                   value={register.Password || ""}
                   onChange={handleInputChange}
@@ -279,6 +307,7 @@ function RegisterCreate() {
             <Divider />
             <Stack spacing={10} padding={5}>
               <Button
+              disabled={validatePassword || validateFeild}
                 // style={{ float: "right" }}
                 onClick={submit}
                 variant="contained"
