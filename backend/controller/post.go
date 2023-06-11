@@ -155,7 +155,7 @@ func (h *HandlerFunc) GetAllFavorite() gin.HandlerFunc {
 		var mapPostFavorite []entity.MapPostFavorite
 		userId, _ := c.Get("userId")
 
-		if err := h.pgDB.Model(entity.MapPostFavorite{}).Where("user_id = ?", userId).Preload("Post").Find(&mapPostFavorite).Error; err != nil {
+		if err := h.pgDB.Model(entity.MapPostFavorite{}).Where("user_id = ?", userId).Preload("Post").Preload("Post.User").Find(&mapPostFavorite).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
