@@ -2,28 +2,26 @@
   height: 100vh;
 }
 
-.is_no_post{
- margin-top: 10px;
- padding-top: 100px;
- font-size: 48px;
- background-color: white;
- height: 100vh;
+.is_no_post {
+  margin-top: 10px;
+  padding-top: 100px;
+  font-size: 48px;
+  background-color: white;
+  height: 100vh;
 }
 
-.map-pin{
+.map-pin {
   padding: 10px;
   /* width: 100vh; */
   height: 100vh;
   text-align: center;
 }
-.MuiCardMedia-root.MuiCardMedia-media.MuiCardMedia-img.css-o69gx8-MuiCardMedia-root.css-o69gx8-MuiCardMedia-root{
+.MuiCardMedia-root.MuiCardMedia-media.MuiCardMedia-img.css-o69gx8-MuiCardMedia-root.css-o69gx8-MuiCardMedia-root {
   height: 400px;
-  
- 
+
   background: #ccc;
   width: 100%;
-  object-fit:contain;
- 
+  object-fit: contain;
 }
 .App-logo {
   height: 40vmin;
@@ -91,18 +89,19 @@
   background-color: #0062cc;
 }
 
-
-
 /* CSS */
 .button-pin-map {
   margin-top: 32px;
   background: green;
   border-radius: 999px;
-  box-shadow: #5E5DF0 0 10px 20px -10px;
+  box-shadow: #5e5df0 0 10px 20px -10px;
   box-sizing: border-box;
-  color: #FFFFFF;
+  color: #ffffff;
   cursor: pointer;
-  font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+  font-family: Inter, Helvetica, "Apple Color Emoji", "Segoe UI Emoji",
+    NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji",
+    EmojiSymbols, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue",
+    "Noto Sans", sans-serif;
   font-size: 16px;
   font-weight: 700;
   line-height: 24px;
@@ -116,18 +115,91 @@
   word-break: break-word;
   border: 0;
 }
-.topic{
+.topic {
   text-align: center;
 }
-.postPage{
+.postPage {
   height: 80vh;
   padding-bottom: 100px;
   overflow: scroll;
 }
 
-.tag{
+.tag {
   background-color: red;
   border-radius: 10px;
   margin-right: 2px;
   padding: 5px;
+}
+
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 14px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+.mySlides {
+  display: block;
+}
+
+.postImg {
+  width: 100%;
+  height: 400px;
+  background: #ccc;
+  object-fit: contain;
+}
+
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
 }

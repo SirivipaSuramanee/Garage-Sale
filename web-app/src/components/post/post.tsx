@@ -30,12 +30,14 @@ type props = {
 export function Post({ Data }: props) {
   const [favorites, setFavorites] = useState("inherit");
   const [onLocation, setOnLocation] = useState(false);
+  const [selectImgIndex, setSelectImgIndex] = useState(0);
+  
 
   const likePost = async (id: number) => {
     const data = {
       postId: id,
     };
-    console.log(data)
+    console.log(data);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -45,16 +47,14 @@ export function Post({ Data }: props) {
       body: JSON.stringify(data),
     };
 
-
-
     const apiUrl = "http://localhost:8080/favorite";
 
     fetch(apiUrl, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res == "like posted") {
-          console.log("like posted")
-        } 
+          console.log("like posted");
+        }
       });
   };
 
@@ -62,7 +62,7 @@ export function Post({ Data }: props) {
     const data = {
       postId: id,
     };
-    console.log(data)
+    console.log(data);
     const requestOptions = {
       method: "DELETE",
       headers: {
@@ -72,21 +72,19 @@ export function Post({ Data }: props) {
       body: JSON.stringify(data),
     };
 
-
-
     const apiUrl = "http://localhost:8080/favorite";
 
     fetch(apiUrl, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res == "like posted") {
-          console.log("like posted")
-        } 
+          console.log("like posted");
+        }
       });
   };
   useEffect(() => {
-    if (Data.like){
-      setFavorites("red")
+    if (Data.like) {
+      setFavorites("red");
     }
   }, []);
 
@@ -102,10 +100,7 @@ export function Post({ Data }: props) {
           marginLeft: 1,
           marginRight: 1,
 
-          "&:hover": {
-            backgroundColor: "#C9DFEC",
-            opacity: [0.9, 0.8, 0.7],
-          },
+         
         }}
       >
         <CardHeader
@@ -121,25 +116,32 @@ export function Post({ Data }: props) {
           title={Data.topic}
           subheader={dayjs(Data.CreatedAt).format("DD MMM, YYYY")}
         />
-        {/* <CardMedia
-        component="img"
-        className="css-o69gx8-MuiCardMedia-root"
-        image={Data.picture[0].Url}
-        alt="Paella dish"
-      /> */}
 
-        <ImageList sx={{ height: 350 }} cols={3} rowHeight={164}>
-          {Data.picture.map((item) => (
-            <ImageListItem key={item.ID}>
-              <img
-                src={`${item.Url}?w=164&h=164&fit=crop&auto=format`}
-                srcSet={`${item.Url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                //alt={item.title}
-                loading="lazy"
-              />
-            </ImageListItem>
+        <div className="slideshow-container">
+          {Data.picture.map((item, index) => (
+          <div className="mySlides fade" style={{display: selectImgIndex == index ? "block" :"none" }} >
+            <div className="numbertext">{index+1} / {Data.picture.length}</div>
+            <img className="postImg" src={item.Url} />
+          </div>
           ))}
-        </ImageList>
+
+          <a className="prev" onClick={() => {
+            if (selectImgIndex == 0) {
+              setSelectImgIndex(Data.picture.length - 1);
+            }else{
+              setSelectImgIndex((prev) => prev-1);
+            }
+          }}>&#10094;</a>
+          <a className="next" onClick={() => {
+            if (selectImgIndex == Data.picture.length - 1) {
+              setSelectImgIndex(0);
+            }else{
+              setSelectImgIndex((prev) => prev+1);
+            }
+          }}>&#10095;</a>
+        </div>
+        <br />
+
         <CardContent>
           <Typography variant="body2">
             หมวดหมู่:{" "}
@@ -163,9 +165,9 @@ export function Post({ Data }: props) {
             onClick={() => {
               if (favorites === "red") {
                 setFavorites("inherit");
-                unlikePost(Data.id)
+                unlikePost(Data.id);
               } else {
-                likePost(Data.id)
+                likePost(Data.id);
                 setFavorites("red");
               }
             }}
