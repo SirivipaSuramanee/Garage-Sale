@@ -71,22 +71,21 @@ export default function IconLabelTabs() {
                 checked={showAll} 
                 inputProps={{ 'name': 'all' }}
                 onChange={(e) => {
-                  console.log(e.target.name)
                   setShowAll(e.target.checked)
                 }}/>}
                 label={"แสดงทั้งหมด"}
               />
             </dd>
-            {category.map((item: CategoryInterface, index: number) => (
+            {!showAll && category.map((item: CategoryInterface, index: number) => (
               <dd>
                 <FormControlLabel
                   key={item.ID}
                   control={<Checkbox 
-                  checked={showAll} 
-                  inputProps={{ 'name': item.name }}
+                  checked={ item.check} 
                   onChange={(e) => {
-                    
-                  
+                    setCategory((prev) =>
+                    prev.map((v,i) => i === index ? {...v, check : e.target.checked} : v)
+                    )
                   }} />}
                   label={item.name}
                 />
