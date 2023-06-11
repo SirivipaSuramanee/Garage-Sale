@@ -9,7 +9,7 @@ type Dataprops = {
 export default function CheckboxLabels({Data}: Dataprops) {
   return (
     <>
-      <FormControlLabel key={Data.ID} control={<Checkbox defaultChecked />} label={Data.name} />
+      <FormControlLabel key={Data.ID} control={<Checkbox checked={true}/>} label={Data.name} />
     </>
    
   );

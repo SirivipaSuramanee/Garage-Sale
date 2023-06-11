@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -6,17 +6,18 @@ import PostPage from "./post/PostPage";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import HomeIcon from '@mui/icons-material/Home';
-import PostCreate from "./post/postCreate"
+import HomeIcon from "@mui/icons-material/Home";
+import PostCreate from "./post/postCreate";
 import Category from "./category";
 import { CategoryInterface } from "../models/ICategory";
-
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 export default function IconLabelTabs() {
   const [value, setValue] = useState(0);
   const [token, setToken] = useState<String | null>(null);
   const [category, setCategory] = useState<CategoryInterface[]>([]);
-  
+  const [showAll, setShowAll] = useState(true);
 
   const getToken = () => {
     const token = localStorage.getItem("token");
@@ -38,7 +39,6 @@ export default function IconLabelTabs() {
       .then((response) => response.json())
 
       .then((res) => {
-
         if (res.data) {
           setCategory(res.data);
         } else {
@@ -47,17 +47,80 @@ export default function IconLabelTabs() {
       });
   };
 
-
   useEffect(() => {
     //ทำงานทุกครั้งที่เรารีเฟชหน้าจอ
     //ไม่ให้รันแบบอินฟินิตี้ลูป
+    
     getToken();
     GetAllCategory();
   }, []);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-if (token)
+  if (token)
+    return (
+      <>
+        <CssBaseline />
+        <div className="filterBar">
+          <p>หมวดหมู่</p>
+          <ul className="filterCategories">
+            <dd>
+              <FormControlLabel
+                key={"all"}
+                control={<Checkbox 
+                checked={showAll} 
+                inputProps={{ 'name': 'all' }}
+                onChange={(e) => {
+                  console.log(e.target.name)
+                  setShowAll(e.target.checked)
+                }}/>}
+                label={"แสดงทั้งหมด"}
+              />
+            </dd>
+            {category.map((item: CategoryInterface, index: number) => (
+              <dd>
+                <FormControlLabel
+                  key={item.ID}
+                  control={<Checkbox 
+                  checked={showAll} 
+                  inputProps={{ 'name': item.name }}
+                  onChange={(e) => {
+                    
+                  
+                  }} />}
+                  label={item.name}
+                />
+              </dd>
+            ))}
+          </ul>
+          <p>วันที่</p>
+          <ul className="filterCategories">
+            <dd>วันที่เปิด</dd>
+            <dd>วันที่ปิด</dd>
+          </ul>
+        </div>
+        <Container maxWidth="md">
+          <Box sx={{ bgcolor: "#E0FFFF", padding: 1 }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="icon label tabs example"
+            >
+              <Tab icon={<HomeIcon />} label="หน้าหลัก" />
+              <Tab icon={<AddBusinessIcon />} label="สร้างโพสต์" />
+              <Tab icon={<AddBusinessIcon />} label="โฟสต์ของฉัน" />
+              <Tab icon={<AddBusinessIcon />} label="โพสต์ที่สนใจ" />
+            </Tabs>
+
+            {value === 0 && <PostPage value={value} />}
+            {value === 1 && <PostCreate />}
+            {value === 2 && <PostPage value={value} />}
+            {value === 3 && <PostPage value={value} />}
+          </Box>
+        </Container>
+      </>
+    );
+
   return (
     <>
       <CssBaseline />
@@ -67,45 +130,13 @@ if (token)
             value={value}
             onChange={handleChange}
             aria-label="icon label tabs example"
-            
           >
-            <Tab  icon={<HomeIcon />} label="หน้าหลัก" />
-            <Tab icon={<AddBusinessIcon />} label="สร้างโพสต์" /> 
-            <Tab icon={<AddBusinessIcon />} label="โฟสต์ของฉัน" />
-            <Tab icon={<AddBusinessIcon />} label="โพสต์ที่สนใจ" />
+            <Tab icon={<HomeIcon />} label="หน้าหลัก" />
           </Tabs>
 
-          {value === 0 && category.map((item: CategoryInterface) =>  (
-            <Category key={item.ID} Data={item} />
-          )
-          )}
-       {value === 0 &&  <PostPage value={value}/>}
-       {value === 1 &&  <PostCreate />}
-       {value === 2 &&  <PostPage value={value}/>}
-       {value === 3 &&  <PostPage value={value}/>}
-        </Box>
-      </Container>
-    </>
-  );
-
-  return (
-    <>
-      <CssBaseline />
-      <Container maxWidth="md">
-        <Box sx={{ bgcolor: "#E0FFFF", padding: 1 }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="icon label tabs example"
-          >
-            <Tab  icon={<HomeIcon />} label="หน้าหลัก" />
-          </Tabs>
-
-         <PostPage value={value}/>
-      
+          <PostPage value={value} />
         </Box>
       </Container>
     </>
   );
 }
-

@@ -9,7 +9,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
 import { PostAllInterface } from "../../models/IPost";
-import CardMedia from "@mui/material/CardMedia";
 import CardActions from "@mui/material/CardActions";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -20,8 +19,6 @@ import Dialog from "@mui/material/Dialog";
 import PostLocation from "../maps/postLocation";
 import { formatDateTime } from "../util/format";
 import { CategoryInterface } from "../../models/ICategory";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
 
 type props = {
   Data: PostAllInterface;
@@ -99,8 +96,6 @@ export function Post({ Data }: props) {
           padding: 1,
           marginLeft: 1,
           marginRight: 1,
-
-         
         }}
       >
         <CardHeader

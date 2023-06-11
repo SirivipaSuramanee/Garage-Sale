@@ -203,3 +203,17 @@
   from {opacity: .4}
   to {opacity: 1}
 }
+
+.filterBar{
+  padding: 100px;
+  display: block;
+  position: absolute;
+  width: 500px;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.filterCategories{
+  height: 200px;
+  overflow:scroll
+}

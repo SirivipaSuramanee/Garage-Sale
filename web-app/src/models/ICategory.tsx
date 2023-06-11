@@ -1,4 +1,5 @@
 export interface CategoryInterface{
     ID: number,
-    name: string
+    name: string,
+    check: boolean,
    }
