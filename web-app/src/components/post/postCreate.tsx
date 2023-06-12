@@ -82,8 +82,11 @@ function PostCreate() {
     if (reason === "clickaway") {
       return;
     }
-
-    setSuccess(false);
+    if (success){
+      setSuccess(false);
+      window.location.href = "/"
+    }
+    
 
     setError(false);
   };
@@ -155,9 +158,7 @@ function PostCreate() {
       .then((response) => response.json())
       .then((res) => {
         if (res == "posted") {
-          setSuccess(true);
-          setPost({})
-          
+          setSuccess(true);          
         } else {
           setError(true);
           setErrorMessage(res.error);
@@ -222,12 +223,12 @@ function PostCreate() {
       <Snackbar
         id="success"
         open={success}
-        autoHideDuration={6000}
+        autoHideDuration={1000}
         onClose={handleClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert onClose={handleClose} severity="success">
-          Successfully
+          เปิดบ้านสำเร็จ
         </Alert>
       </Snackbar>
       <Snackbar

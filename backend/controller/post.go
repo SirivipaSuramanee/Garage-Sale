@@ -265,3 +265,32 @@ func (h *HandlerFunc) DeleteLikeMapPostFavorite() gin.HandlerFunc {
 	}
 
 }
+
+func (h *HandlerFunc) DeletePost() gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		id := c.Param("id")
+
+		if err := h.pgDB.Where("post_id = ?", id).Delete(&entity.Img{}).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if err := h.pgDB.Where("post_id = ?", id).Delete(&entity.MapPostCategory{}).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if err := h.pgDB.Where("post_id = ?", id).Delete(&entity.MapPostFavorite{}).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if err := h.pgDB.Where("id = ?", id).Delete(&entity.Post{}).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, "delete success")
+	}
+}

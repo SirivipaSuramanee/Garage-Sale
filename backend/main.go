@@ -34,23 +34,29 @@ func main() {
 	r.GET("/test", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "service up")
 	})
-	//--------------minio---------------
-	r.POST("/upload", h.UploadPicture())
-	r.POST("/uploads", h.UploadPictures())
+	protect := r.Group("")
+	protect.Use(middleware.Authorizes())
+
+	{
+		//--------------minio---------------
+		protect.POST("/upload", h.UploadPicture())
+		protect.POST("/uploads", h.UploadPictures())
+
+		//------------category--------------
+		protect.GET("/category", h.GetAllCategory)
+
+		//-----------Post-----------------
+		protect.GET("/favorite", h.GetAllFavorite())
+		protect.POST("/favorite", h.CreateMapPostFavorite())
+		protect.DELETE("/favorite", h.DeleteLikeMapPostFavorite())
+
+		protect.POST("/postCreate", h.CreatePost())
+		protect.GET("/post", h.GetAllPost())
+		protect.DELETE("/post/:id", h.DeletePost())
+	}
 
 	//--------------Login---------------
 	r.POST("/registerCreate", h.Register)
 	r.POST("/login", h.Login)
-
-	//------------category--------------
-	r.GET("/category", h.GetAllCategory)
-
-	//-----------Post-----------------
-	r.GET("/favorite", h.GetAllFavorite())
-	r.POST("/favorite", h.CreateMapPostFavorite())
-	r.DELETE("/favorite", h.DeleteLikeMapPostFavorite())
-	r.POST("/postCreate", h.CreatePost())
-	r.GET("/post", h.GetAllPost())
-
 	r.Run()
 }
