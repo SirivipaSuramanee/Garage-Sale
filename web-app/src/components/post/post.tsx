@@ -28,7 +28,6 @@ export function Post({ Data }: props) {
   const [favorites, setFavorites] = useState("inherit");
   const [onLocation, setOnLocation] = useState(false);
   const [selectImgIndex, setSelectImgIndex] = useState(0);
-  
 
   const likePost = async (id: number) => {
     const data = {
@@ -114,26 +113,41 @@ export function Post({ Data }: props) {
 
         <div className="slideshow-container">
           {Data.picture.map((item, index) => (
-          <div className="mySlides fade" style={{display: selectImgIndex == index ? "block" :"none" }} >
-            <div className="numbertext">{index+1} / {Data.picture.length}</div>
-            <img className="postImg" src={item.Url} />
-          </div>
+            <div
+              className="mySlides fade"
+              style={{ display: selectImgIndex == index ? "block" : "none" }}
+            >
+              <div className="numbertext">
+                {index + 1} / {Data.picture.length}
+              </div>
+              <img className="postImg" src={item.Url} />
+            </div>
           ))}
 
-          <a className="prev" onClick={() => {
-            if (selectImgIndex == 0) {
-              setSelectImgIndex(Data.picture.length - 1);
-            }else{
-              setSelectImgIndex((prev) => prev-1);
-            }
-          }}>&#10094;</a>
-          <a className="next" onClick={() => {
-            if (selectImgIndex == Data.picture.length - 1) {
-              setSelectImgIndex(0);
-            }else{
-              setSelectImgIndex((prev) => prev+1);
-            }
-          }}>&#10095;</a>
+          <a
+            className="prev"
+            onClick={() => {
+              if (selectImgIndex == 0) {
+                setSelectImgIndex(Data.picture.length - 1);
+              } else {
+                setSelectImgIndex((prev) => prev - 1);
+              }
+            }}
+          >
+            &#10094;
+          </a>
+          <a
+            className="next"
+            onClick={() => {
+              if (selectImgIndex == Data.picture.length - 1) {
+                setSelectImgIndex(0);
+              } else {
+                setSelectImgIndex((prev) => prev + 1);
+              }
+            }}
+          >
+            &#10095;
+          </a>
         </div>
         <br />
 
@@ -149,10 +163,23 @@ export function Post({ Data }: props) {
             {Data.detail}
           </Typography>
         </CardContent>
+      
+        <ul>
         <Typography variant="body1" sx={{ textAlign: "start" }}>
-          เวลาเปิดบ้าน: {formatDateTime(Data.dayTimeOpen)} ถึง{" "}
-          {formatDateTime(Data.dayTimeClose)}
-        </Typography>
+             รายละเอียด
+            </Typography>
+          <dd>
+            <Typography variant="body1" sx={{ textAlign: "start" }}>
+              เวลาเปิดบ้าน: {formatDateTime(Data.dayTimeOpen)} ถึง{" "}
+              {formatDateTime(Data.dayTimeClose)}
+            </Typography>
+          </dd>
+          <dd>
+            <Typography variant="body1" sx={{ textAlign: "start" }}>
+              {"เบอร์โทรศัพท์: " + Data.user.tel}
+            </Typography>
+          </dd>
+        </ul>
 
         <CardActions>
           <IconButton

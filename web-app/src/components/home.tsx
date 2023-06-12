@@ -110,8 +110,7 @@ export default function IconLabelTabs() {
               <Tab icon={<AddBusinessIcon />} label="โฟสต์ของฉัน" />
               <Tab icon={<AddBusinessIcon />} label="โพสต์ที่สนใจ" />
             </Tabs>
-
-            {value === 0 && <PostPage value={value} />}
+            {value === 0 && <PostPage value={value} filter={category.filter((e) => e.check).map((v) => v.name)} />}
             {value === 1 && <PostCreate />}
             {value === 2 && <PostPage value={value} />}
             {value === 3 && <PostPage value={value} />}

@@ -29,6 +29,7 @@ export interface PostAllInterface {
   category: CategoryInterface[];
   user: {
     profileURL: string,
+    tel: string
   }
   lat: string;
   lng: string;

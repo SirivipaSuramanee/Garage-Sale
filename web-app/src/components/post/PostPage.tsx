@@ -1,13 +1,16 @@
 import {useEffect, useState} from "react";
 import { PostAllInterface } from "../../models/IPost";
 import { Post } from "./post"
+import { CategoryInterface } from "../../models/ICategory";
+import { Tune } from "@mui/icons-material";
 
 type props = {
   value:number
+  filter?: string[] ;
 };
-export default function PostPage({value}: props) {
+export default function PostPage({value,filter}: props) {
   const [post,setPost] = useState<PostAllInterface[]>([])
-
+  const [postTemp,setPostTemp] = useState<PostAllInterface[]>([])
   useEffect(() => {
     
     if (value === 2) {
@@ -18,8 +21,27 @@ export default function PostPage({value}: props) {
     }else{
      GetAllPost("all");
     }
-   
   }, [value]);
+
+  function filterCategories(p: PostAllInterface, categoryList: string[]) {
+   for (var i of p.category) {
+    if (categoryList.includes(i.name)){
+      return true
+    }
+   }
+   return false
+  }
+  useEffect(() => {
+    if (filter && filter.length > 0) {
+     
+      var ft = postTemp.filter((p) => filterCategories(p, filter))
+      setPost(ft)
+    }else {
+      setPost(postTemp)
+    }
+   
+   
+  }, [filter]);
 
   const GetMyFavorite = async () => {
     const apiUrl = `http://localhost:8080/favorite`;
@@ -36,6 +58,7 @@ export default function PostPage({value}: props) {
       .then((res) => {
 
         if (res.data) {
+          setPostTemp(res.data)
           setPost(res.data);
         } else {
           console.log(res.err);
@@ -52,17 +75,19 @@ export default function PostPage({value}: props) {
         "Content-Type": "application/json",
       },
     };
+
     fetch(apiUrl, requestOptions)
       .then((response) => response.json())
 
       .then((res) => {
 
         if (res.data) {
+          setPostTemp(res.data)
           setPost(res.data);
         } else {
           console.log(res.err);
         }
-      });
+      })
   };
 
   return (
@@ -79,6 +104,9 @@ export default function PostPage({value}: props) {
       key={item.id}
       Data={item}
       />
+      <div className="sizeBox">
+
+      </div>
       </>
     ))
   }

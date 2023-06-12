@@ -1,5 +1,5 @@
 .App {
-  height: 100vh;
+  overflow: hidden;
 }
 
 .is_no_post {
@@ -119,7 +119,7 @@
   text-align: center;
 }
 .postPage {
-  height: 80vh;
+  height: 100vh;
   padding-bottom: 100px;
   overflow: scroll;
 }
@@ -229,4 +229,9 @@ center {
   text-align: center;
   overflow: hidden;
   height: 100vh;
+}
+
+.sizeBox {
+  display: block;
+  height: 10px;
 }
