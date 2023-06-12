@@ -1,5 +1,6 @@
 .App {
-  overflow: hidden;
+  height: 100vh;
+  overflow: visible;
 }
 
 .is_no_post {
@@ -118,11 +119,6 @@
 .topic {
   text-align: center;
 }
-.postPage {
-  height: 100vh;
-  padding-bottom: 100px;
-  overflow: scroll;
-}
 
 .tag {
   background-color: red;
@@ -210,12 +206,6 @@
   position: absolute;
   width: 400px;
   overflow: hidden;
-  height: 100vh;
-}
-
-.filterCategories{
-  max-height: 200px;
-  overflow:scroll
 }
 
 .mapAllPost{
@@ -235,3 +225,23 @@ center {
   display: block;
   height: 10px;
 }
+
+nav {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #939393;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #000000; 
+} 

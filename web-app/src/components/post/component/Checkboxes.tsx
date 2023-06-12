@@ -23,6 +23,7 @@ export default function CheckboxesTags({Data,setCategory}:props) {
       onChange={(_,value)=>{
         setCategory(value);
       }}
+      style={{overflow:"scroll" , maxHeight:"80px"}}
       options={Data}
       disableCloseOnSelect
       getOptionLabel={(option) => option.name}

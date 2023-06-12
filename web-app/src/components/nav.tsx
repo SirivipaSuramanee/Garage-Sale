@@ -52,6 +52,7 @@ export default function Nav() {
     setAnchorElUser(null);
   };
   return (
+    <nav>
     <Box sx={{ flexGrow: 1 ,display: "sticky"}}>
       <AppBar color="primary" position="sticky">
         <Toolbar>
@@ -144,5 +145,6 @@ export default function Nav() {
         </Toolbar>
       </AppBar>
     </Box>
+    </nav>
   );
 }

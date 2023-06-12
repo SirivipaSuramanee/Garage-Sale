@@ -12,11 +12,14 @@ import Category from "./category";
 import { CategoryInterface } from "../models/ICategory";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import CheckboxesTags from "./post/component/Checkboxes";
+import Typography from "@mui/material/Typography";
 
 export default function IconLabelTabs() {
   const [value, setValue] = useState(0);
   const [token, setToken] = useState<String | null>(null);
   const [category, setCategory] = useState<CategoryInterface[]>([]);
+  const [categoryFilter, setCategoryFilter] = useState<CategoryInterface[]>([]);
   const [showAll, setShowAll] = useState(true);
 
   const getToken = () => {
@@ -50,7 +53,7 @@ export default function IconLabelTabs() {
   useEffect(() => {
     //ทำงานทุกครั้งที่เรารีเฟชหน้าจอ
     //ไม่ให้รันแบบอินฟินิตี้ลูป
-    
+
     getToken();
     GetAllCategory();
   }, []);
@@ -59,39 +62,17 @@ export default function IconLabelTabs() {
   };
   if (token)
     return (
-      <>
-        <CssBaseline />
+      <div >
         <div className="filterBar">
-          <p>หมวดหมู่</p>
-          <ul className="filterCategories">
-            <dd>
-              <FormControlLabel
-                key={"all"}
-                control={<Checkbox 
-                checked={showAll} 
-                inputProps={{ 'name': 'all' }}
-                onChange={(e) => {
-                  setShowAll(e.target.checked)
-                }}/>}
-                label={"แสดงทั้งหมด"}
-              />
-            </dd>
-            {!showAll && category.map((item: CategoryInterface, index: number) => (
-              <dd>
-                <FormControlLabel
-                  key={item.ID}
-                  control={<Checkbox 
-                  checked={ item.check} 
-                  onChange={(e) => {
-                    setCategory((prev) =>
-                    prev.map((v,i) => i === index ? {...v, check : e.target.checked} : v)
-                    )
-                  }} />}
-                  label={item.name}
-                />
-              </dd>
-            ))}
-          </ul>
+          <Typography component="h1" variant="h6" color="primary" gutterBottom>
+            หมวดหมู่
+          </Typography>
+          <CheckboxesTags
+            Data={category}
+            setCategory={(value) => {
+              setCategoryFilter(value);
+            }}
+          />
           <p>วันที่</p>
           <ul className="filterCategories">
             <dd>วันที่เปิด</dd>
@@ -110,18 +91,22 @@ export default function IconLabelTabs() {
               <Tab icon={<AddBusinessIcon />} label="โฟสต์ของฉัน" />
               <Tab icon={<AddBusinessIcon />} label="โพสต์ที่สนใจ" />
             </Tabs>
-            {value === 0 && <PostPage value={value} filter={category.filter((e) => e.check).map((v) => v.name)} />}
+            {value === 0 && (
+              <PostPage
+                value={value}
+                filter={categoryFilter.map((v) => v.name)}
+              />
+            )}
             {value === 1 && <PostCreate />}
             {value === 2 && <PostPage value={value} />}
             {value === 3 && <PostPage value={value} />}
           </Box>
         </Container>
-      </>
+      </div>
     );
 
   return (
     <>
-      <CssBaseline />
       <Container maxWidth="md">
         <Box sx={{ bgcolor: "#E0FFFF", padding: 1 }}>
           <Tabs

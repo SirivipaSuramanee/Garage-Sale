@@ -32,6 +32,7 @@ export default function PostPage({value,filter}: props) {
    return false
   }
   useEffect(() => {
+    console.log(filter)
     if (filter && filter.length > 0) {
      
       var ft = postTemp.filter((p) => filterCategories(p, filter))
