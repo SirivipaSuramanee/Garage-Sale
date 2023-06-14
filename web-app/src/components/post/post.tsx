@@ -7,28 +7,38 @@ import Avatar from "@mui/material/Avatar";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-
 import { PostAllInterface } from "../../models/IPost";
 import CardActions from "@mui/material/CardActions";
-
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import dayjs from "dayjs";
 import Dialog from "@mui/material/Dialog";
 import PostLocation from "../maps/postLocation";
 import { formatDateTime } from "../util/format";
 import { CategoryInterface } from "../../models/ICategory";
-
+import Tooltip from "@mui/material/Tooltip/Tooltip";
+import Menu from "@mui/material/Menu/Menu";
+import MenuItem from "@mui/material/MenuItem/MenuItem";
 type props = {
   Data: PostAllInterface;
 };
-
+const settings = ["ลบโพสต์"];
 export function Post({ Data }: props) {
   const [favorites, setFavorites] = useState("inherit");
   const [onLocation, setOnLocation] = useState(false);
   const [selectImgIndex, setSelectImgIndex] = useState(0);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
+  const handleCloseUserMenu = (event: React.MouseEvent<HTMLLIElement, MouseEvent> , index : number) => {
+    if (index ===0) {
+      deletePost(Data.id)
+    }
+    setAnchorElUser(null);
+  };
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
   const likePost = async (id: number) => {
     const data = {
       postId: id,
@@ -50,6 +60,31 @@ export function Post({ Data }: props) {
       .then((res) => {
         if (res == "like posted") {
           console.log("like posted");
+        }
+      });
+  };
+
+  const deletePost = async (id: number) => {
+    const data = {
+      postId: id,
+    };
+    console.log(data);
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+
+    const apiUrl = `http://localhost:8080/post/${id}`;
+
+    fetch(apiUrl, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res == "delete success") {
+          window.location.reload()
         }
       });
   };
@@ -103,9 +138,36 @@ export function Post({ Data }: props) {
             <Avatar alt={String(Data.id)} src={Data.user.profileURL}></Avatar>
           }
           action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
+            <>
+            <Tooltip title="Open settings"
+            >
+              <IconButton aria-label="settings" onClick={handleOpenUserMenu}>
+                <MoreVertIcon></MoreVertIcon>
+              </IconButton>
+              </Tooltip>
+              <Menu
+                    sx={{ mt: "45px" }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                   
+                    open={Boolean(anchorElUser)}
+                  >
+                    {settings.map((setting, index) => (
+                      <MenuItem key={setting} value={setting}  onClick={(e) => {handleCloseUserMenu(e, index)}} >
+                        <Typography textAlign="center">{setting}</Typography>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+            </>
           }
           title={Data.topic}
           subheader={dayjs(Data.CreatedAt).format("DD MMM, YYYY")}
@@ -163,11 +225,11 @@ export function Post({ Data }: props) {
             {Data.detail}
           </Typography>
         </CardContent>
-      
+
         <ul>
-        <Typography variant="body1" sx={{ textAlign: "start" }}>
-             รายละเอียด
-            </Typography>
+          <Typography variant="body1" sx={{ textAlign: "start" }}>
+            รายละเอียด
+          </Typography>
           <dd>
             <Typography variant="body1" sx={{ textAlign: "start" }}>
               เวลาเปิดบ้าน: {formatDateTime(Data.dayTimeOpen)} ถึง{" "}
