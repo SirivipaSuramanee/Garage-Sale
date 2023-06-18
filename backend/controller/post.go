@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/SirivipaSuramanee/entity"
@@ -80,13 +81,28 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 		userId, ok := c.Get("userId")
 		if ok {
 			condition := c.Query("condition")
+
+			startDate := c.Query("startDate")
+			endDate := c.Query("endDate")
+
+			var filterDate string
+			if endDate != "" && startDate != "" {
+				filterDate = fmt.Sprintf("day_time_open >= '%s' and day_time_close <= '%s'", startDate, endDate)
+			} else if startDate != "" {
+				filterDate = fmt.Sprintf("day_time_open >= '%s'", startDate)
+			}
 			if condition == "all" {
-				if err := h.pgDB.Model(&entity.Post{}).Preload("User").Find(&posts).Error; err != nil {
+				if err := h.pgDB.Model(&entity.Post{}).Where(filterDate).Preload("User").Find(&posts).Error; err != nil {
 					c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 					return
 				}
 			} else if condition == "myPost" {
 				if err := h.pgDB.Model(&entity.Post{}).Where("user_id = ?", userId).Preload("User").Find(&posts).Error; err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+					return
+				}
+			} else if condition == "notMe" {
+				if err := h.pgDB.Model(&entity.Post{}).Where("user_id != ?", userId).Preload("User").Find(&posts).Error; err != nil {
 					c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 					return
 				}

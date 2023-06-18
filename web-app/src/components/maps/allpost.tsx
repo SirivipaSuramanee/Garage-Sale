@@ -8,6 +8,7 @@ import {
 import meLocation from "../../assert/placeholder.png"
 import React, { useEffect, useState, useCallback } from "react";
 import { PostAllInterface } from "../../models/IPost";
+import { Token } from "@mui/icons-material";
   const apikey = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 
 
@@ -65,7 +66,12 @@ export default function MapLocation() {
     useEffect(() => {
         //ทำงานทุกครั้งที่เรารีเฟชหน้าจอ
         //ไม่ให้รันแบบอินฟินิตี้ลูป
-        GetAllPost("all");
+        var Token = window.localStorage.getItem("token")
+        if (Token) {
+          GetAllPost("notMe");
+        } else {
+          GetAllPost("all");
+        }
         getPosition();
   
       }, []);
@@ -121,6 +127,11 @@ export default function MapLocation() {
 
           {post.map((item:PostAllInterface) => (
              <MarkerF 
+             icon={{
+              url: item.user.profileURL,
+              scaledSize: new window.google.maps.Size(60, 60),
+               origin: new window.google.maps.Point(0, 0),
+             }}
              position={
                new google.maps.LatLng(
                 Number(item.lat),

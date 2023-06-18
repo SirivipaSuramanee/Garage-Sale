@@ -3,12 +3,15 @@ import { PostAllInterface } from "../../models/IPost";
 import { Post } from "./post"
 import { CategoryInterface } from "../../models/ICategory";
 import { Tune } from "@mui/icons-material";
+import { Dayjs } from "dayjs";
 
 type props = {
-  value:number
+  value:number;
   filter?: string[] ;
+  startDate?: Dayjs | null; 
+  endDate?: Dayjs | null;
 };
-export default function PostPage({value,filter}: props) {
+export default function PostPage({value,filter,startDate,endDate}: props) {
   const [post,setPost] = useState<PostAllInterface[]>([])
   const [postTemp,setPostTemp] = useState<PostAllInterface[]>([])
   useEffect(() => {
@@ -21,7 +24,7 @@ export default function PostPage({value,filter}: props) {
     }else{
      GetAllPost("all");
     }
-  }, [value]);
+  }, [value,startDate,endDate]);
 
   function filterCategories(p: PostAllInterface, categoryList: string[]) {
    for (var i of p.category) {
@@ -68,7 +71,9 @@ export default function PostPage({value,filter}: props) {
   };
 
   const GetAllPost = async (condition: string) => {
-    const apiUrl = `http://localhost:8080/post?condition=${condition}`;
+    var start_date = startDate?.startOf("day").toISOString();
+    var end_date = endDate?.endOf("day").toISOString()
+    const apiUrl = `http://localhost:8080/post?condition=${condition}&startDate=${start_date ?? ""}&endDate=${end_date ?? ""}`;
     const requestOptions = {
       method: "GET",
       headers: {
@@ -86,7 +91,8 @@ export default function PostPage({value,filter}: props) {
           setPostTemp(res.data)
           setPost(res.data);
         } else {
-          console.log(res.err);
+          setPostTemp([])
+          setPost([]);
         }
       })
   };

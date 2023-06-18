@@ -76,8 +76,9 @@ export default function Nav() {
             </Typography>
 
             <Typography variant="h4" component="a" href="/map/post" style={{textDecoration: "none"}} color="pink">
-              maps
+              แสดงบน google map
             </Typography>
+            
             </div>
 
             <Stack spacing={1} direction="row">

@@ -10,12 +10,17 @@ import HomeIcon from "@mui/icons-material/Home";
 import PostCreate from "./post/postCreate";
 import Category from "./category";
 import { CategoryInterface } from "../models/ICategory";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs, { Dayjs } from "dayjs";
 import CheckboxesTags from "./post/component/Checkboxes";
 import Typography from "@mui/material/Typography";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 export default function IconLabelTabs() {
+  const [CloseTime, setCloseTime] = useState<Dayjs | null>();
+  const [OpenTime, setOpenTime] = useState<Dayjs | null>(dayjs(new Date()));
   const [value, setValue] = useState(0);
   const [token, setToken] = useState<String | null>(null);
   const [category, setCategory] = useState<CategoryInterface[]>([]);
@@ -62,8 +67,11 @@ export default function IconLabelTabs() {
   };
   if (token)
     return (
-      <div >
-        <div className="filterBar">
+      <div>
+        <div
+          className="filterBar"
+          style={{ visibility: value == 3 ? "hidden" : "visible" }}
+        >
           <Typography component="h1" variant="h6" color="primary" gutterBottom>
             หมวดหมู่
           </Typography>
@@ -73,11 +81,40 @@ export default function IconLabelTabs() {
               setCategoryFilter(value);
             }}
           />
-          <p>วันที่</p>
-          <ul className="filterCategories">
-            <dd>วันที่เปิด</dd>
-            <dd>วันที่ปิด</dd>
-          </ul>
+          <Typography component="h1" variant="h6" color="primary" gutterBottom>
+            วัน
+          </Typography>
+
+          <dd>
+            วันที่เปิด
+            <span>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["DatePicker"]}>
+                  <DatePicker
+                    value={OpenTime}
+                    onChange={(value) => {
+                      setOpenTime(value);
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </span>
+          </dd>
+          <dd>
+            วันที่ปิด
+            <span>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["DatePicker"]}>
+                  <DatePicker
+                    value={CloseTime}
+                    onChange={(value) => {
+                      setCloseTime(value);
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </span>
+          </dd>
         </div>
         <Container maxWidth="md">
           <Box sx={{ bgcolor: "#E0FFFF", padding: 1 }}>
@@ -94,11 +131,18 @@ export default function IconLabelTabs() {
             {value === 0 && (
               <PostPage
                 value={value}
+                startDate={OpenTime}
+                endDate={CloseTime}
                 filter={categoryFilter.map((v) => v.name)}
               />
             )}
             {value === 1 && <PostCreate />}
-            {value === 2 && <PostPage value={value} />}
+            {value === 2 && (
+              <PostPage
+                filter={categoryFilter.map((v) => v.name)}
+                value={value}
+              />
+            )}
             {value === 3 && <PostPage value={value} />}
           </Box>
         </Container>
