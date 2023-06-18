@@ -91,6 +91,10 @@ export default function PostPage({value,filter}: props) {
       })
   };
 
+  const isOwnPost = (email: string) => {
+    return email === window.localStorage.getItem("email")
+  }
+
   return (
   <div className="postPage">
   {post.length == 0 && 
@@ -104,6 +108,7 @@ export default function PostPage({value,filter}: props) {
       <Post 
       key={item.id}
       Data={item}
+      isOwn={isOwnPost(item.user.email)}
       />
       <div className="sizeBox">
 

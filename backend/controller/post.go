@@ -24,7 +24,6 @@ func (h *HandlerFunc) CreatePost() gin.HandlerFunc {
 
 		CP := entity.Post{
 			Topic:        post.Topic,
-			Price:        post.Price,
 			DayTimeOpen:  post.DayTimeOpen,
 			DayTimeClose: post.DayTimeClose,
 			Detail:       post.Detail,
@@ -76,7 +75,7 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		var posts []entity.Post
-		var respone []entity.PostRespone
+		var respone []entity.PostResponse
 
 		userId, ok := c.Get("userId")
 		if ok {
@@ -127,7 +126,7 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 				like = true
 			}
 
-			respone = append(respone, entity.PostRespone{
+			respone = append(respone, entity.PostResponse{
 				ID:           post.ID,
 				CreateAt:     post.CreatedAt,
 				Topic:        post.Topic,
@@ -151,7 +150,7 @@ func (h *HandlerFunc) GetAllFavorite() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		var respone []entity.PostRespone
+		var respone []entity.PostResponse
 		var mapPostFavorite []entity.MapPostFavorite
 		userId, _ := c.Get("userId")
 
@@ -182,7 +181,7 @@ func (h *HandlerFunc) GetAllFavorite() gin.HandlerFunc {
 				return
 			}
 
-			respone = append(respone, entity.PostRespone{
+			respone = append(respone, entity.PostResponse{
 				ID:           post.ID,
 				CreateAt:     post.CreatedAt,
 				Topic:        post.Topic,
@@ -264,6 +263,54 @@ func (h *HandlerFunc) DeleteLikeMapPostFavorite() gin.HandlerFunc {
 		c.JSON(http.StatusCreated, mpf)
 	}
 
+}
+
+func (h *HandlerFunc) UpdatePost() gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		var req entity.PostRequest
+		var post entity.Post
+
+		if err := c.BindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if tx := h.pgDB.Where("id = ?", req.ID).First(&post); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "post not found"})
+			return
+		}
+		post.Topic = req.Topic
+		post.Detail = req.Detail
+		post.Lat = req.Lat
+		post.Lng = req.Lng
+
+		h.pgDB.Save(&post)
+
+		if err := h.pgDB.Where("post_id = ?", post.ID).Delete(&entity.MapPostCategory{}).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		for _, i := range req.Category {
+			var category entity.Category
+			if tx := h.pgDB.Where("id = ?", i.ID).First(&category); tx.RowsAffected == 0 {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "Category not found"})
+				return
+			}
+
+			map_post_category := entity.MapPostCategory{
+				Category: category,
+				Post:     post,
+			}
+
+			if err := h.pgDB.Create(&map_post_category).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+		}
+
+		c.JSON(http.StatusOK, "update")
+	}
 }
 
 func (h *HandlerFunc) DeletePost() gin.HandlerFunc {

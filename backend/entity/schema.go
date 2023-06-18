@@ -53,7 +53,6 @@ type MapPostFavorite struct {
 type Post struct {
 	gorm.Model
 	Topic        string    `json:"topic"`
-	Price        int       `json:"price"`
 	Picture      string    `json:"picture"` //###############
 	DayTimeOpen  time.Time `json:"dayTimeOpen"`
 	DayTimeClose time.Time `json:"dayTimeClose"`

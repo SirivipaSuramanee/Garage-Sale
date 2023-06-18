@@ -11,12 +11,6 @@
   height: 100vh;
 }
 
-.map-pin {
-  padding: 10px;
-  /* width: 100vh; */
-  height: 100vh;
-  text-align: center;
-}
 .MuiCardMedia-root.MuiCardMedia-media.MuiCardMedia-img.css-o69gx8-MuiCardMedia-root.css-o69gx8-MuiCardMedia-root {
   height: 400px;
 
@@ -245,3 +239,32 @@ nav {
 ::-webkit-scrollbar-thumb:hover {
   background: #000000; 
 } 
+
+.editPost {
+  background-color: red;
+  width: 500px;
+  height: 100px;
+  position: absolute;
+  z-index: 10;
+}
+.map-location {
+  padding: 10px;
+  /* width: 100vh; */
+  height: 100%;
+  left: 50px;
+  position: absolute;
+}
+
+.map-pin {
+    padding: 10px;
+    height: 100vh;
+    text-align: center;
+    left: 70px;
+    position: absolute;
+}
+
+.editMap {
+  position: relative;
+  padding: 10px;
+  height: 400px
+}

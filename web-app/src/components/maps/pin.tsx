@@ -11,16 +11,19 @@ import {
   const apikey = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 
 type Dataprops = {
-  closeMap: () => void
+  lati?: number;
+  lngi?: number;
+  closeMap: () => void;
   setLatLng: (lat: number, lng: number) => void;
 };
-  function MapPin({ setLatLng, closeMap }: Dataprops) {
+  function MapPin({ setLatLng, closeMap, lati, lngi }: Dataprops) {
 
     const [lat, setLat] = useState(Number);
     const [lng, setLng] = useState(Number);
     const [cenLat, setCenLat] = useState(Number);
     const [cenLng, setCenLng] = useState(Number);
     const [zoom, setZoom] = useState(12);
+    const [currentPosition, setCurrentPosition] = useState(false)
     const center = {
       lat: 13.752547578244073,
       lng: 100.49271903050739,
@@ -31,7 +34,7 @@ type Dataprops = {
     }
    
     const mapContainerStyle = {
-      width: "80vh",
+      width: "90vw",
       height: "80%",
     };
   
@@ -47,7 +50,7 @@ type Dataprops = {
           setLng(e.coords.longitude)    
           setCenLat(e.coords.latitude)
           setCenLng(e.coords.longitude)          
-
+          setCurrentPosition(true)
         }
       );
     }
@@ -63,7 +66,15 @@ type Dataprops = {
     useEffect(() => {
       //ทำงานทุกครั้งที่เรารีเฟชหน้าจอ
       //ไม่ให้รันแบบอินฟินิตี้ลูป
-      getPosition();
+      if (!lati) {
+        getPosition();
+      }else {
+        setCenLat(lati!)
+        setCenLng(lngi!)   
+        setLat(lati!)
+        setLng(lngi!)
+        setCurrentPosition(true)
+      }
 
     }, []);
     if (loadError) return <p>Error loading maps</p>;
@@ -71,6 +82,13 @@ type Dataprops = {
       return (
         <p>
           loading maps
+          <CircularProgress color="success" />
+        </p>
+      );
+      if (!currentPosition)
+      return (
+        <p>
+          loading your location
           <CircularProgress color="success" />
         </p>
       );

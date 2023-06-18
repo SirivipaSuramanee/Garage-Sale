@@ -19,19 +19,26 @@ import { CategoryInterface } from "../../models/ICategory";
 import Tooltip from "@mui/material/Tooltip/Tooltip";
 import Menu from "@mui/material/Menu/Menu";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
+import  EditPost  from "./editPost";
+
 type props = {
   Data: PostAllInterface;
+  isOwn?: boolean
 };
-const settings = ["ลบโพสต์"];
-export function Post({ Data }: props) {
+const settings = ["ลบโพสต์", "แก้ไข"];
+export function Post({ Data, isOwn }: props) {
   const [favorites, setFavorites] = useState("inherit");
   const [onLocation, setOnLocation] = useState(false);
   const [selectImgIndex, setSelectImgIndex] = useState(0);
+  const [onEdit, setonEdit] = useState(false)
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleCloseUserMenu = (event: React.MouseEvent<HTMLLIElement, MouseEvent> , index : number) => {
-    if (index ===0) {
+    if (index === 0) {
       deletePost(Data.id)
+    }
+    if (index === 1){
+      setonEdit(true)
     }
     setAnchorElUser(null);
   };
@@ -93,7 +100,6 @@ export function Post({ Data }: props) {
     const data = {
       postId: id,
     };
-    console.log(data);
     const requestOptions = {
       method: "DELETE",
       headers: {
@@ -119,10 +125,25 @@ export function Post({ Data }: props) {
     }
   }, []);
 
+  if (onEdit) {
+    return (
+      <>
+      <EditPost Data={Data} onChange={(v:boolean) =>{
+        setonEdit(v)
+        window.location.reload()
+      }} />
+      </>
+    )
+  }
+
   return (
     <>
-      <Dialog open={onLocation}>
-        <PostLocation Data={Data} setOffLocation={() => setOnLocation(false)} />
+      <Dialog 
+      fullScreen
+      open={onLocation}>
+        <PostLocation
+        lat={Data.lat} lng={Data.lng} setOffLocation={() => setOnLocation(false)} />
+
       </Dialog>
       <Card
         component="div"
@@ -158,11 +179,14 @@ export function Post({ Data }: props) {
                       vertical: "top",
                       horizontal: "right",
                     }}
+                    onClose={() => {
+                      setAnchorElUser(null);
+                    }}
                    
                     open={Boolean(anchorElUser)}
                   >
                     {settings.map((setting, index) => (
-                      <MenuItem key={setting} value={setting}  onClick={(e) => {handleCloseUserMenu(e, index)}} >
+                      <MenuItem key={setting} value={setting} disabled={!isOwn} onClick={(e) => {handleCloseUserMenu(e, index)}} >
                         <Typography textAlign="center">{setting}</Typography>
                       </MenuItem>
                     ))}
@@ -238,7 +262,7 @@ export function Post({ Data }: props) {
           </dd>
           <dd>
             <Typography variant="body1" sx={{ textAlign: "start" }}>
-              {"เบอร์โทรศัพท์: " + Data.user.tel}
+              {"เบอร์โทรติดต่อ: " + Data.user.tel}
             </Typography>
           </dd>
         </ul>

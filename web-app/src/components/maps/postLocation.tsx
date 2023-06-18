@@ -14,21 +14,23 @@ import { PostAllInterface } from "../../models/IPost";
 
 
 type props = {
+  width?: string;
     setOffLocation: () => void;
-    Data: PostAllInterface;
+    lat: string;
+    lng: string;
 }
 
-export default function PostLocation({setOffLocation,Data}:props) {
+export default function PostLocation({setOffLocation ,lat ,lng ,width}:props) {
 
     
     const [zoom, setZoom] = useState(12);
     const center = {
-      lat: Number(Data.lat),
-      lng: Number(Data.lng),
+      lat: Number(lat),
+      lng: Number(lng),
     };
    
     const mapContainerStyle = {
-      width: "80vh",
+      width: width ?? "80vw",
       height: "80%",
     };
   
@@ -66,7 +68,7 @@ export default function PostLocation({setOffLocation,Data}:props) {
   
    
     return (
-      <div className="map-pin">
+      <div className="map-location">
     
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
@@ -83,13 +85,16 @@ export default function PostLocation({setOffLocation,Data}:props) {
           }
           ></MarkerF>
         </GoogleMap>
-        <button 
+       {!width &&
+       <div >
+       <button 
         className="button-pin-map"
         onClick={() => {
             setOffLocation()
         }}>
           ปิด
         </button>
+       </div>}
       </div>
     );
   }

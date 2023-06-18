@@ -39,7 +39,6 @@ func main() {
 
 	{
 		//--------------minio---------------
-		protect.POST("/upload", h.UploadPicture())
 		protect.POST("/uploads", h.UploadPictures())
 
 		//------------category--------------
@@ -52,11 +51,13 @@ func main() {
 
 		protect.POST("/postCreate", h.CreatePost())
 		protect.GET("/post", h.GetAllPost())
+		protect.PATCH("/post", h.UpdatePost())
 		protect.DELETE("/post/:id", h.DeletePost())
 	}
 
 	//--------------Login---------------
 	r.POST("/registerCreate", h.Register)
 	r.POST("/login", h.Login)
+	r.POST("/upload", h.UploadPicture())
 	r.Run()
 }

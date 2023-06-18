@@ -22,7 +22,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs, { Dayjs } from "dayjs";
 import MapPin from "../maps/pin";
-import Drawer from "@mui/material/Drawer";
 import Dialog from "@mui/material/Dialog";
 import CheckboxesTags from "./component/Checkboxes";
 
@@ -130,12 +129,10 @@ function PostCreate() {
   const PostSavePost = async (picURL: string[]) => {
     const data = {
       topic: post.Topic ?? "",
-      price: Number(post.Price) ?? 0,
       picture: picURL ?? "",
       dayTimeOpen: OpenTime?.toISOString(),
       dayTimeClose: CloseTime?.toISOString(),
       detail: post.Detail ?? "",
-      categoryID: Number(post.categoryID) ?? 0,
       email: localStorage.getItem("email"),
       lat: String(post.lat) ?? "",
       lng: String(post.lng) ?? "",
@@ -195,6 +192,7 @@ function PostCreate() {
   return (
     <>
       <Dialog
+      fullScreen
         open={onPinMap}
         onClose={(_, r) => {
           if (r === "backdropClick") setOnPinMap(false);

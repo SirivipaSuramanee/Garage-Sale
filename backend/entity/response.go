@@ -2,7 +2,7 @@ package entity
 
 import "time"
 
-type PostRespone struct {
+type PostResponse struct {
 	ID           uint                   `json:"id"`
 	CreateAt     time.Time              `json:"CreatedAt"`
 	Topic        string                 `json:"topic"`
