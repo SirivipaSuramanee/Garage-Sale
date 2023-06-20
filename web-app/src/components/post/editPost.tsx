@@ -25,9 +25,10 @@ type props = {
   Data: PostAllInterface;
   onChange: (v: boolean) => void;
 };
-export default function EditPost({ Data,onChange }: props) {
+export default function EditPost({ Data, onChange }: props) {
   const [favorites, setFavorites] = useState("inherit");
   const [CloseTime, setCloseTime] = useState<Dayjs | null>(dayjs(new Date()));
+  const [OpenTime, setOpenTime] = useState<Dayjs | null>(dayjs(new Date()));
   const [onLocation, setOnLocation] = useState(false);
   const [selectImgIndex, setSelectImgIndex] = useState(0);
   const [post, setPost] = useState<Partial<PostInterface>>({});
@@ -74,15 +75,40 @@ export default function EditPost({ Data,onChange }: props) {
         }
       });
   };
+  const saveImg = async () => {
+    const formData = new FormData();
+    if (post.Picture) {
+      post.Picture.forEach((value,index)=> {
+        formData.append(`img${index+1}`, value);
+      }) 
 
-  const save = () => {
+      const apiUrl = `http://localhost:8080/uploads?len=${post.Picture.length.toString()}`;
+      const requestOptions = {
+        method: "POST", //เอาข้อมูลไปเก็บไว้ในดาต้าเบส
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, //การยืนยันตัวตน
+        },
+        body: formData,
+      };
+      fetch(apiUrl, requestOptions)
+      .then((response) => response.json())
+      .then((res) => save(res.data))
+     
+    }else {
+      save()
+    }
+  }
+  const save = async (picURL?: string) => {
     const data = {
       ID: post.ID,
+      picture: picURL ?? null,
       topic: post.Topic ?? "",
       detail: post.Detail ?? "",
       lat: String(post.lat) ?? "",
       lng: String(post.lng) ?? "",
-      category: post.category
+      dayTimeOpen: OpenTime,
+      dayTimeClose: CloseTime,
+      category: post.category,
     };
 
     const requestOptions = {
@@ -94,24 +120,33 @@ export default function EditPost({ Data,onChange }: props) {
       body: JSON.stringify(data),
     };
 
-
-
     const apiUrl = "http://localhost:8080/post";
 
     fetch(apiUrl, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res == "update") {
-
-          onChange(false)
-        } 
+          onChange(false);
+        }
       });
-  }
+  };
 
   useEffect(() => {
     GetAllCategory();
     initData();
   }, []);
+
+  //handler
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files: File[] = [];
+    if (event.target.files && event.target.files.length > 0) {
+      for (let index = 0; index < event.target.files.length; index++) {
+        files.push(event.target.files[index]);
+      }
+    }
+    setPost({ ...post, ["Picture" as keyof typeof post]: files });
+  };
+
   return (
     <>
       <Dialog
@@ -156,11 +191,11 @@ export default function EditPost({ Data,onChange }: props) {
               <IconButton
                 aria-label="settings"
                 onClick={() => {
-                  save()
+                  saveImg()
                 }}
               >
                 <Typography variant="body1" sx={{ textAlign: "start" }}>
-                   บันทึก
+                  บันทึก
                 </Typography>
               </IconButton>
             </>
@@ -168,19 +203,59 @@ export default function EditPost({ Data,onChange }: props) {
           title={post.Topic}
           subheader={dayjs(Data.CreatedAt).format("DD MMM, YYYY")}
         />
-          <FormControl fullWidth variant="outlined">
-            <TextField
-              style={{ marginLeft: "10px" }}
-              id="Topic"
-              variant="outlined"
-              type="string"
-              size="medium"
-              placeholder="กรุณากรอกหัวข้อ"
-              value={post.Topic || ""}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+        <FormControl fullWidth variant="outlined">
+          <TextField
+            style={{ marginLeft: "10px" }}
+            id="Topic"
+            variant="outlined"
+            type="string"
+            size="medium"
+            placeholder="กรุณากรอกหัวข้อ"
+            value={post.Topic || ""}
+            onChange={handleInputChange}
+          />
+        </FormControl>
         <div className="sizeBox"></div>
+        { post.Picture ? 
+        <div className="slideshow-container">
+          {post.Picture.map((item, index) => (
+            <div
+              className="mySlides fade"
+              style={{ display: selectImgIndex == index ? "block" : "none" }}
+            >
+              <div className="numbertext">
+                {index + 1} / {post.Picture?.length}
+              </div>
+              <img className="postImg" src={URL.createObjectURL(item)} alt={item.name} />
+            </div>
+          ))}
+
+          <a
+            className="prev"
+            onClick={() => {
+              if (selectImgIndex == 0) {
+                setSelectImgIndex(post.Picture!.length - 1);
+              } else {
+                setSelectImgIndex((prev) => prev - 1);
+              }
+            }}
+          >
+            &#10094;
+          </a>
+          <a
+            className="next"
+            onClick={() => {
+              if (selectImgIndex == post.Picture!.length - 1) {
+                setSelectImgIndex(0);
+              } else {
+                setSelectImgIndex((prev) => prev + 1);
+              }
+            }}
+          >
+            &#10095;
+          </a>
+        </div>
+        :
         <div className="slideshow-container">
           {Data.picture.map((item, index) => (
             <div
@@ -219,6 +294,13 @@ export default function EditPost({ Data,onChange }: props) {
             &#10095;
           </a>
         </div>
+      }
+        <input
+          type="file"
+          accept="image/*"
+          multiple={true}
+          onChange={handleImageChange}
+        />
         <br />
 
         <CardContent>
@@ -229,30 +311,29 @@ export default function EditPost({ Data,onChange }: props) {
             ))}
           </Typography>
           <div className="sizeBox"></div>
-            <CheckboxesTags
-              Data={category}
-              setCategory={(value) =>
-                setPost({ ...post, ["category" as keyof typeof post]: value })
-              }
-            />
+          <CheckboxesTags
+            Data={category}
+            setCategory={(value) =>
+              setPost({ ...post, ["category" as keyof typeof post]: value })
+            }
+          />
           <br />
           <Typography variant="body1" sx={{ textAlign: "start" }}>
             {post.Detail}
           </Typography>
-           
-            <FormControl fullWidth variant="outlined">
-              <TextField
-                style={{ marginLeft: "10px" }}
-                id="Detail"
-                variant="outlined"
-                type="string"
-                size="medium"
-                placeholder="กรุณากรอกหัวข้อ"
-                value={post.Detail || ""}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-          
+
+          <FormControl fullWidth variant="outlined">
+            <TextField
+              style={{ marginLeft: "10px" }}
+              id="Detail"
+              variant="outlined"
+              type="string"
+              size="medium"
+              placeholder="กรุณากรอกหัวข้อ"
+              value={post.Detail || ""}
+              onChange={handleInputChange}
+            />
+          </FormControl>
         </CardContent>
 
         <ul>
@@ -268,9 +349,9 @@ export default function EditPost({ Data,onChange }: props) {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DateTimePicker"]}>
                   <DateTimePicker
-                    value={CloseTime}
+                    value={OpenTime}
                     onChange={(value) => {
-                      setCloseTime(value);
+                      setOpenTime(value);
                     }}
                   />
                 </DemoContainer>

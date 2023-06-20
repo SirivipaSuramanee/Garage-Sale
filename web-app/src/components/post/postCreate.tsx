@@ -386,11 +386,7 @@ function PostCreate() {
                 {post.Picture && (
                   <>
                     <Grid item xs={12}>
-                      {/* <img
-                        src={URL.createObjectURL(post.Picture[0])}
-                        alt=""
-                        style={{ height: 200 }}
-                      /> */}
+                     
                       {post.Picture.map((item) => (
                         <img
                         src={URL.createObjectURL(item)}

@@ -299,6 +299,8 @@ func (h *HandlerFunc) UpdatePost() gin.HandlerFunc {
 		post.Detail = req.Detail
 		post.Lat = req.Lat
 		post.Lng = req.Lng
+		post.DayTimeOpen = req.DayTimeOpen
+		post.DayTimeClose = req.DayTimeClose
 
 		h.pgDB.Save(&post)
 
@@ -322,6 +324,24 @@ func (h *HandlerFunc) UpdatePost() gin.HandlerFunc {
 			if err := h.pgDB.Create(&map_post_category).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 				return
+			}
+		}
+
+		if req.Picture != nil {
+			if err := h.pgDB.Where("post_id = ?", post.ID).Delete(&entity.Img{}).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+
+			for _, i := range req.Picture {
+				img := entity.Img{
+					Url:  i,
+					Post: post,
+				}
+				if err := h.pgDB.Create(&img).Error; err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+					return
+				}
 			}
 		}
 
