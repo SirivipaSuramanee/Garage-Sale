@@ -78,9 +78,9 @@ export default function EditPost({ Data, onChange }: props) {
   const saveImg = async () => {
     const formData = new FormData();
     if (post.Picture) {
-      post.Picture.forEach((value,index)=> {
-        formData.append(`img${index+1}`, value);
-      }) 
+      post.Picture.forEach((value, index) => {
+        formData.append(`img${index + 1}`, value);
+      });
 
       const apiUrl = `http://localhost:8080/uploads?len=${post.Picture.length.toString()}`;
       const requestOptions = {
@@ -91,13 +91,12 @@ export default function EditPost({ Data, onChange }: props) {
         body: formData,
       };
       fetch(apiUrl, requestOptions)
-      .then((response) => response.json())
-      .then((res) => save(res.data))
-     
-    }else {
-      save()
+        .then((response) => response.json())
+        .then((res) => save(res.data));
+    } else {
+      save();
     }
-  }
+  };
   const save = async (picURL?: string) => {
     const data = {
       ID: post.ID,
@@ -191,7 +190,7 @@ export default function EditPost({ Data, onChange }: props) {
               <IconButton
                 aria-label="settings"
                 onClick={() => {
-                  saveImg()
+                  saveImg();
                 }}
               >
                 <Typography variant="body1" sx={{ textAlign: "start" }}>
@@ -216,85 +215,89 @@ export default function EditPost({ Data, onChange }: props) {
           />
         </FormControl>
         <div className="sizeBox"></div>
-        { post.Picture ? 
-        <div className="slideshow-container">
-          {post.Picture.map((item, index) => (
-            <div
-              className="mySlides fade"
-              style={{ display: selectImgIndex == index ? "block" : "none" }}
-            >
-              <div className="numbertext">
-                {index + 1} / {post.Picture?.length}
+        {post.Picture ? (
+          <div className="slideshow-container">
+            {post.Picture.map((item, index) => (
+              <div
+                className="mySlides fade"
+                style={{ display: selectImgIndex == index ? "block" : "none" }}
+              >
+                <div className="numbertext">
+                  {index + 1} / {post.Picture?.length}
+                </div>
+                <img
+                  className="postImg"
+                  src={URL.createObjectURL(item)}
+                  alt={item.name}
+                />
               </div>
-              <img className="postImg" src={URL.createObjectURL(item)} alt={item.name} />
-            </div>
-          ))}
+            ))}
 
-          <a
-            className="prev"
-            onClick={() => {
-              if (selectImgIndex == 0) {
-                setSelectImgIndex(post.Picture!.length - 1);
-              } else {
-                setSelectImgIndex((prev) => prev - 1);
-              }
-            }}
-          >
-            &#10094;
-          </a>
-          <a
-            className="next"
-            onClick={() => {
-              if (selectImgIndex == post.Picture!.length - 1) {
-                setSelectImgIndex(0);
-              } else {
-                setSelectImgIndex((prev) => prev + 1);
-              }
-            }}
-          >
-            &#10095;
-          </a>
-        </div>
-        :
-        <div className="slideshow-container">
-          {Data.picture.map((item, index) => (
-            <div
-              className="mySlides fade"
-              style={{ display: selectImgIndex == index ? "block" : "none" }}
+            <a
+              className="prev"
+              onClick={() => {
+                if (selectImgIndex == 0) {
+                  setSelectImgIndex(post.Picture!.length - 1);
+                } else {
+                  setSelectImgIndex((prev) => prev - 1);
+                }
+              }}
             >
-              <div className="numbertext">
-                {index + 1} / {Data.picture.length}
+              &#10094;
+            </a>
+            <a
+              className="next"
+              onClick={() => {
+                if (selectImgIndex == post.Picture!.length - 1) {
+                  setSelectImgIndex(0);
+                } else {
+                  setSelectImgIndex((prev) => prev + 1);
+                }
+              }}
+            >
+              &#10095;
+            </a>
+          </div>
+        ) : (
+          <div className="slideshow-container">
+            {Data.picture.map((item, index) => (
+              <div
+                className="mySlides fade"
+                style={{ display: selectImgIndex == index ? "block" : "none" }}
+              >
+                <div className="numbertext">
+                  {index + 1} / {Data.picture.length}
+                </div>
+                <img className="postImg" src={item.Url} />
               </div>
-              <img className="postImg" src={item.Url} />
-            </div>
-          ))}
+            ))}
 
-          <a
-            className="prev"
-            onClick={() => {
-              if (selectImgIndex == 0) {
-                setSelectImgIndex(Data.picture.length - 1);
-              } else {
-                setSelectImgIndex((prev) => prev - 1);
-              }
-            }}
-          >
-            &#10094;
-          </a>
-          <a
-            className="next"
-            onClick={() => {
-              if (selectImgIndex == Data.picture.length - 1) {
-                setSelectImgIndex(0);
-              } else {
-                setSelectImgIndex((prev) => prev + 1);
-              }
-            }}
-          >
-            &#10095;
-          </a>
-        </div>
-      }
+            <a
+              className="prev"
+              onClick={() => {
+                if (selectImgIndex == 0) {
+                  setSelectImgIndex(Data.picture.length - 1);
+                } else {
+                  setSelectImgIndex((prev) => prev - 1);
+                }
+              }}
+            >
+              &#10094;
+            </a>
+            <a
+              className="next"
+              onClick={() => {
+                if (selectImgIndex == Data.picture.length - 1) {
+                  setSelectImgIndex(0);
+                } else {
+                  setSelectImgIndex((prev) => prev + 1);
+                }
+              }}
+            >
+              &#10095;
+            </a>
+          </div>
+        )}
         <input
           type="file"
           accept="image/*"
@@ -349,6 +352,8 @@ export default function EditPost({ Data, onChange }: props) {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DateTimePicker"]}>
                   <DateTimePicker
+                    minDate={dayjs(new Date())}
+                    maxDate={CloseTime}
                     value={OpenTime}
                     onChange={(value) => {
                       setOpenTime(value);
@@ -362,6 +367,7 @@ export default function EditPost({ Data, onChange }: props) {
                 <DemoContainer components={["DateTimePicker"]}>
                   <DateTimePicker
                     value={CloseTime}
+                    minDate={OpenTime}
                     onChange={(value) => {
                       setCloseTime(value);
                     }}

@@ -335,6 +335,8 @@ function PostCreate() {
                     <DemoContainer components={["DateTimePicker"]}>
                       <DateTimePicker
                         value={OpenTime}
+                        minDate={dayjs(new Date())}
+                        maxDate={CloseTime}
                         onChange={(value) => {
                           setOpenTime(value);
                         }}
@@ -358,6 +360,7 @@ function PostCreate() {
                     <DemoContainer components={["DateTimePicker"]}>
                       <DateTimePicker
                         value={CloseTime}
+                        minDate={OpenTime}
                         onChange={(value) => {
                           setCloseTime(value);
                         }}
