@@ -1,7 +1,4 @@
-import { UserInterface } from "../../models/IUser";
 import { useEffect, useState } from "react";
-import Container from "@mui/material/Container";
-import Stack from "@mui/material/Stack";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import Paper from "@mui/material/Paper";
@@ -12,7 +9,7 @@ import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { SelectChangeEvent } from "@mui/material/Select";
 import React from "react";
 import { PostInterface } from "../../models/IPost";
 import { CategoryInterface } from "../../models/ICategory";

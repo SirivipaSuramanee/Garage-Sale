@@ -12,6 +12,8 @@ import Tooltip from "@mui/material/Tooltip/Tooltip";
 import Avatar from "@mui/material/Avatar/Avatar";
 import Menu from "@mui/material/Menu/Menu";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
+import TemporaryDrawer from "./drawer";
+import CssBaseline from "@mui/material/CssBaseline";
 
 
 const settings = ["Profile", "Logout"];
@@ -54,6 +56,7 @@ export default function Nav() {
   return (
     <nav>
     <Box sx={{ flexGrow: 1 ,display: "sticky"}}>
+    <CssBaseline />
       <AppBar color="primary" position="sticky">
         <Toolbar>
           <IconButton
@@ -62,14 +65,14 @@ export default function Nav() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-          >
+            >
             <MenuIcon />
           </IconButton>
           <Stack
             direction="row"
             sx={{ flexGrow: 1 }}
             justifyContent="space-between"
-          >
+            >
             <div>
             <Typography variant="h4" component="a" href="/" style={{textDecoration: "none", marginRight: "10px"}} color="pink">
               Garage Sale
@@ -89,7 +92,7 @@ export default function Nav() {
                     variant="outlined"
                     component={RouterLink}
                     to="/login"
-                  >
+                    >
                     Login
                   </Button>
                   <Button
@@ -97,7 +100,7 @@ export default function Nav() {
                     variant="outlined"
                     component={RouterLink}
                     to="/register"
-                  >
+                    >
                     Register
                   </Button>
                 </>
@@ -111,7 +114,7 @@ export default function Nav() {
                       <Avatar
                         alt="Remy Sharp"
                         src={profileURL!}
-                      />
+                        />
                     </IconButton>
                   </Tooltip>
                  
@@ -128,9 +131,9 @@ export default function Nav() {
                       vertical: "top",
                       horizontal: "right",
                     }}
-                   
+                    
                     open={Boolean(anchorElUser)}
-                  >
+                    >
                     {settings.map((setting, index) => (
                       <MenuItem key={setting} value={setting}  onClick={(e) => {handleCloseUserMenu(e, index)}} >
                         <Typography textAlign="center">{setting}</Typography>

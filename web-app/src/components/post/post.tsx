@@ -4,7 +4,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
-
+import { useNavigate } from 'react-router-dom';
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { PostAllInterface } from "../../models/IPost";
@@ -20,19 +20,21 @@ import Tooltip from "@mui/material/Tooltip/Tooltip";
 import Menu from "@mui/material/Menu/Menu";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
 import  EditPost  from "./editPost";
+import Button from "@mui/material/Button";
 
 type props = {
   Data: PostAllInterface;
-  isOwn?: boolean
+  isOwn?: boolean;
+  backButton?: boolean;
 };
 const settings = ["ลบโพสต์", "แก้ไข"];
-export function Post({ Data, isOwn }: props) {
+export function Post({ Data, isOwn, backButton }: props) {
   const [favorites, setFavorites] = useState("inherit");
   const [onLocation, setOnLocation] = useState(false);
   const [selectImgIndex, setSelectImgIndex] = useState(0);
   const [onEdit, setonEdit] = useState(false)
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
+  const navigate = useNavigate();
   const handleCloseUserMenu = (event: React.MouseEvent<HTMLLIElement, MouseEvent> , index : number) => {
     if (index === 0) {
       deletePost(Data.id)
@@ -289,6 +291,11 @@ export function Post({ Data, isOwn }: props) {
             <LocationOnIcon />
           </IconButton>
         </CardActions>
+        {backButton &&
+          <Button  onClick={()=>{ navigate('/map/post', { replace: false });}} variant="contained" color="info">
+          กลับ
+         </Button>
+          }
       </Card>
     </>
   );
