@@ -55,6 +55,60 @@ export default function IconLabelTabs() {
       });
   };
 
+  const Ft = () => {
+    return <div
+    className="filterBar"
+    style={{ visibility: value == 3 ? "hidden" : "visible" }}
+  >
+    <Typography component="h1" variant="h6" color="primary" gutterBottom>
+      หมวดหมู่
+    </Typography>
+    <CheckboxesTags
+      Data={category}
+      setCategory={(value) => {
+        setCategoryFilter(value);
+      }}
+    />
+    <Typography component="h1" variant="h6" color="primary" gutterBottom>
+      วัน
+    </Typography>
+
+    <dd>
+      วันที่เปิด
+      <span>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={["DatePicker"]}>
+            <DatePicker
+              minDate={dayjs(new Date())}
+              maxDate={CloseTime}
+              value={OpenTime}
+              onChange={(value) => {
+                setOpenTime(value);
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+      </span>
+    </dd>
+    <dd>
+      วันที่ปิด
+      <span>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={["DatePicker"]}>
+            <DatePicker
+              minDate={OpenTime}
+              value={CloseTime}
+              onChange={(value) => {
+                setCloseTime(value);
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+      </span>
+    </dd>
+  </div>
+  }
+
   useEffect(() => {
     //ทำงานทุกครั้งที่เรารีเฟชหน้าจอ
     //ไม่ให้รันแบบอินฟินิตี้ลูป
@@ -68,57 +122,7 @@ export default function IconLabelTabs() {
   if (token)
     return (
       <div>
-        <div
-          className="filterBar"
-          style={{ visibility: value == 3 ? "hidden" : "visible" }}
-        >
-          <Typography component="h1" variant="h6" color="primary" gutterBottom>
-            หมวดหมู่
-          </Typography>
-          <CheckboxesTags
-            Data={category}
-            setCategory={(value) => {
-              setCategoryFilter(value);
-            }}
-          />
-          <Typography component="h1" variant="h6" color="primary" gutterBottom>
-            วัน
-          </Typography>
-
-          <dd>
-            วันที่เปิด
-            <span>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker"]}>
-                  <DatePicker
-                    minDate={dayjs(new Date())}
-                    maxDate={CloseTime}
-                    value={OpenTime}
-                    onChange={(value) => {
-                      setOpenTime(value);
-                    }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </span>
-          </dd>
-          <dd>
-            วันที่ปิด
-            <span>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker"]}>
-                  <DatePicker
-                    minDate={OpenTime}
-                    value={CloseTime}
-                    onChange={(value) => {
-                      setCloseTime(value);
-                    }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </span>
-          </dd>
-        </div>
+        <Ft></Ft>
         <Container maxWidth="md">
           <Box sx={{ bgcolor: "#E0FFFF", padding: 1 }}>
             <Tabs
@@ -154,6 +158,7 @@ export default function IconLabelTabs() {
 
   return (
     <>
+      <Ft></Ft>
       <Container maxWidth="md">
         <Box sx={{ bgcolor: "#E0FFFF", padding: 1 }}>
           <Tabs
@@ -163,8 +168,10 @@ export default function IconLabelTabs() {
           >
             <Tab icon={<HomeIcon />} label="หน้าหลัก" />
           </Tabs>
-
-          <PostPage value={value} />
+          <PostPage 
+          startDate={OpenTime}
+          endDate={CloseTime}
+          filter={categoryFilter.map((v) => v.name)} value={value} />
         </Box>
       </Container>
     </>

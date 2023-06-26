@@ -86,7 +86,7 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 
 		var filterDate string
 		if endDate != "" && startDate != "" {
-			filterDate = fmt.Sprintf("day_time_open >= '%s' and day_time_close <= '%s'", startDate, endDate)
+			filterDate = fmt.Sprintf("Date(day_time_open) >= '%s' and '%s' <= Date(day_time_close)", startDate, endDate)
 		} else if startDate != "" {
 			filterDate = fmt.Sprintf("day_time_open >= '%s'", startDate)
 		}
