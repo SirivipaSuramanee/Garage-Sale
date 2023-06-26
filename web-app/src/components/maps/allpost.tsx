@@ -3,27 +3,37 @@ import {
     GoogleMap,
     useLoadScript,
     MarkerF,
-    InfoWindowF,
   } from "@react-google-maps/api";
+  import dayjs, { Dayjs } from "dayjs";
 import meLocation from "../../assert/placeholder.png"
 import React, { useEffect, useState, useCallback } from "react";
 import { PostAllInterface } from "../../models/IPost";
-import { Token } from "@mui/icons-material";
-  const apikey = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
+import { useNavigate } from 'react-router-dom';
+import TemporaryDrawer from "../drawer";
+const apikey = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 
-
-export default function MapLocation() {
+type MapLocationProps = {
+  onViewPost: (value: PostAllInterface) => void;
+};
+export default function MapLocation({ onViewPost } : MapLocationProps) {
     const [post,setPost] = useState<PostAllInterface[]>([])
+    const [postTemp,setPostTemp] = useState<PostAllInterface[]>([])
     const [zoom, setZoom] = useState(12);
-    const [lat, setLat] = useState(Number);
-    const [lng, setLng] = useState(Number);
     const [cenLat, setCenLat] = useState(Number);
     const [cenLng, setCenLng] = useState(Number);
-   const [loadLocation, setLoadLoacation] = useState(true)
+    const [loadLocation, setLoadLoacation] = useState(true)
+    const [open, setOpen] = useState(false);
+    const [filter, setFilter] = useState<string[]>([])
+    const [startDate, setStartDate] = useState<Dayjs | null>(dayjs(new Date()));
+    const [endDate, setEndDate] = useState<Dayjs | null>();
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
     const mapContainerStyle = {
       width: "100vw",
       height: "90vh",
     };
+    const navigate = useNavigate();
   
     const option = {
       
@@ -32,9 +42,7 @@ export default function MapLocation() {
     };
     const getPosition = async () => {
         navigator.geolocation.getCurrentPosition( 
-        (e) => {
-            setLat(e.coords.latitude) 
-            setLng(e.coords.longitude)    
+        (e) => {   
             setCenLat(e.coords.latitude)
             setCenLng(e.coords.longitude)  
             setLoadLoacation(false);       
@@ -43,7 +51,10 @@ export default function MapLocation() {
     }
 
     const GetAllPost = async (condition: string) => {
-        const apiUrl = `http://localhost:8080/post?condition=${condition}`;
+
+    var start_date = startDate?.startOf("day").toISOString();
+    var end_date = endDate?.endOf("day").toISOString()
+    const apiUrl = `http://localhost:8080/post?condition=${condition}&startDate=${start_date ?? ""}&endDate=${end_date ?? ""}`;
         const requestOptions = {
           method: "GET",
           headers: {
@@ -58,11 +69,33 @@ export default function MapLocation() {
     
             if (res.data) {
               setPost(res.data);
+              setPostTemp(res.data);
             } else {
-              console.log(res.err);
+              setPostTemp([])
+              setPost([]);
             }
           });
       };
+
+      function filterCategories(p: PostAllInterface, categoryList: string[]) {
+        for (var i of p.category) {
+         if (categoryList.includes(i.name)){
+           return true
+         }
+        }
+        return false
+       }
+       useEffect(() => {
+         if (filter && filter.length > 0) {
+          
+           var ft = postTemp.filter((p) => filterCategories(p, filter))
+           setPost(ft)
+         }else {
+           setPost(postTemp)
+         }
+        
+        
+       }, [filter]);
     useEffect(() => {
         //ทำงานทุกครั้งที่เรารีเฟชหน้าจอ
         //ไม่ให้รันแบบอินฟินิตี้ลูป
@@ -72,9 +105,17 @@ export default function MapLocation() {
         } else {
           GetAllPost("all");
         }
-        getPosition();
-  
+          getPosition();
       }, []);
+
+      useEffect(() => {
+        var Token = window.localStorage.getItem("token")
+        if (Token) {
+          GetAllPost("notMe");
+        } else {
+          GetAllPost("all");
+        }
+      }, [startDate, endDate]);
     const mapRef = React.useRef();
     const onMapLoad = React.useCallback((map: any) => {
       mapRef.current = map;
@@ -92,12 +133,17 @@ export default function MapLocation() {
           <p>loading maps</p>
           <CircularProgress color="success" />
         </center>
-      );
-  
-   
+      );   
     return (
       <div className="mapAllPost">
-    
+        <div className="filterMap">
+          <button onClick={handleDrawerOpen}>filter</button>
+        </div>
+        <TemporaryDrawer open={open} setOpen={setOpen} filter={(v) =>{setFilter(v)} 
+        }
+        startDate={setStartDate}
+        endDate={setEndDate}
+       ></TemporaryDrawer>
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           zoom={zoom}
@@ -127,6 +173,10 @@ export default function MapLocation() {
 
           {post.map((item:PostAllInterface) => (
              <MarkerF 
+             onClick={() => {
+              onViewPost(item)
+              navigate('/post', { replace: false });
+             }}
              icon={{
               url: item.user.profileURL,
               scaledSize: new window.google.maps.Size(60, 60),

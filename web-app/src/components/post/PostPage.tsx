@@ -1,8 +1,6 @@
 import {useEffect, useState} from "react";
 import { PostAllInterface } from "../../models/IPost";
 import { Post } from "./post"
-import { CategoryInterface } from "../../models/ICategory";
-import { Tune } from "@mui/icons-material";
 import { Dayjs } from "dayjs";
 
 type props = {
@@ -35,7 +33,6 @@ export default function PostPage({value,filter,startDate,endDate}: props) {
    return false
   }
   useEffect(() => {
-    console.log(filter)
     if (filter && filter.length > 0) {
      
       var ft = postTemp.filter((p) => filterCategories(p, filter))
