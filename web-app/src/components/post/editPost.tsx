@@ -300,7 +300,7 @@ export default function EditPost({ Data,onChange }: props) {
             setOnPinMap(true);
           }}
         >
-          {post.lat ? "ปักหมุด📍(ปักหมุดแล้ว)" : "ปักหมุด📍"}
+          {post.lat ? "ปักหมุด📍(แก้ไขโลเคชั่น คลิกที่นี่!!)" : "ปักหมุด📍"}
         </Button>
         <div className="editMap">
           <PostLocation
