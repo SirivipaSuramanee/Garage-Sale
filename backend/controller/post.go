@@ -165,7 +165,7 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 func (h *HandlerFunc) GetAllFavorite() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-
+		
 		var respone []entity.PostResponse
 		var mapPostFavorite []entity.MapPostFavorite
 		userId, _ := c.Get("userId")

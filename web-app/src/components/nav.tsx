@@ -12,9 +12,9 @@ import Tooltip from "@mui/material/Tooltip/Tooltip";
 import Avatar from "@mui/material/Avatar/Avatar";
 import Menu from "@mui/material/Menu/Menu";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
-import TemporaryDrawer from "./drawer";
 import CssBaseline from "@mui/material/CssBaseline";
-
+import mapIcon from "../assert/google-maps.png"
+import SvgIcon from "@mui/icons-material/Menu";
 
 const settings = ["Profile", "Logout"];
 export default function Nav() {
@@ -78,13 +78,12 @@ export default function Nav() {
               Garage Sale
             </Typography>
 
-            <Typography variant="h4" component="a" href="/map/post" style={{textDecoration: "none"}} color="pink">
-              แสดงบน google map
-            </Typography>
-            
             </div>
 
             <Stack spacing={1} direction="row">
+              <IconButton href="/map/post">
+                  <img src={mapIcon} alt="mapIcon" style={{width:"40px",height:"40px"}}/>
+              </IconButton>
               {!token && (
                 <>
                   <Button

@@ -53,6 +53,7 @@ func (h *HandlerFunc) UploadPicture() gin.HandlerFunc {
 
 func (h *HandlerFunc) UploadPictures() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+
 		lenStr := ctx.Query("len")
 		len, err := strconv.Atoi(lenStr)
 		userId, _ := ctx.Get("userId")

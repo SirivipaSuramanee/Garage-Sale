@@ -25,9 +25,6 @@ func main() {
 		log.Fatalln(err)
 	}
 	h := controller.NewHandlerFunc(&cgf, db, minioClient)
-
-	// connect minio
-
 	r := gin.Default()
 
 	r.Use(middleware.CORSMiddleware())
@@ -56,6 +53,7 @@ func main() {
 	r.POST("/login", h.Login)
 	r.POST("/upload", h.UploadPicture())
 	r.GET("/post", h.GetAllPost())
+
 	//------------category--------------
 	r.GET("/category", h.GetAllCategory)
 	r.Run()
