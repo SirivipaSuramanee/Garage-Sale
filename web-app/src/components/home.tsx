@@ -122,7 +122,7 @@ export default function IconLabelTabs() {
           </dd>
         </div>
         <Container maxWidth="md">
-          <Box sx={{ bgcolor: "#CCCCFF", padding: 1 }}>
+          <Box sx={{ bgcolor: "#DBE9FA", padding: 1 }}>
             <Tabs
               value={value}
               onChange={handleChange}

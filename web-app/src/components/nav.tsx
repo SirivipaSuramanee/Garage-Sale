@@ -16,7 +16,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import mapIcon from "../assert/google-maps.png"
 import SvgIcon from "@mui/icons-material/Menu";
 
-const settings = ["ออกจากระบบ"];
+const settings = ["", "ออกจากระบบ"];
 export default function Nav() {
   const [token, setToken] = useState<String | null>(null);
   const [profileURL,setProfileURL] = useState<string | null>(null);
@@ -58,7 +58,7 @@ export default function Nav() {
     <nav>
     <Box sx={{ flexGrow: 1 ,display: "sticky"}}>
     <CssBaseline />
-      <AppBar style={{background:'#4E5180'}} position="sticky">
+      <AppBar style={{background:'#728FCE'}} position="sticky">
         <Toolbar>
           <Stack
             direction="row"
