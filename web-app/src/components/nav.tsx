@@ -16,7 +16,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import mapIcon from "../assert/google-maps.png"
 import SvgIcon from "@mui/icons-material/Menu";
 
-const settings = ["Profile", "Logout"];
+const settings = ["ออกจากระบบ"];
 export default function Nav() {
   const [token, setToken] = useState<String | null>(null);
   const [profileURL,setProfileURL] = useState<string | null>(null);
@@ -53,11 +53,12 @@ export default function Nav() {
     }
     setAnchorElUser(null);
   };
+
   return (
     <nav>
     <Box sx={{ flexGrow: 1 ,display: "sticky"}}>
     <CssBaseline />
-      <AppBar color="primary" position="sticky">
+      <AppBar style={{background:'#4E5180'}} position="sticky">
         <Toolbar>
           <Stack
             direction="row"
@@ -65,7 +66,7 @@ export default function Nav() {
             justifyContent="space-between"
             >
             <div>
-            <Typography variant="h4" component="a" href="/" style={{textDecoration: "none", marginRight: "10px"}} color="pink">
+            <Typography variant="h3" component="a" href="/" style={{textDecoration: "none", marginRight: "10px"}} color="white">
               Garage Sale
             </Typography>
 
@@ -73,7 +74,7 @@ export default function Nav() {
 
             <Stack spacing={1} direction="row">
               <IconButton href="/map/post">
-                  <img src={mapIcon} alt="mapIcon" style={{width:"40px",height:"40px"}}/>
+                  <img src={mapIcon} alt="mapIcon" style={{width:"33px",height:"33px"}}/>
               </IconButton>
               {!token && (
                 <>
@@ -83,7 +84,7 @@ export default function Nav() {
                     component={RouterLink}
                     to="/login"
                     >
-                    Login
+                    เข้าสู่ระบบ
                   </Button>
                   <Button
                     color="inherit"
@@ -91,14 +92,14 @@ export default function Nav() {
                     component={RouterLink}
                     to="/register"
                     >
-                    Register
+                    ลงทะเบียน
                   </Button>
                 </>
               )}
 
               {token && (
                 <>
-                  <p>{localStorage.getItem("email")}</p>
+                  <p style={{ display: "flex", alignItems: "center", height: "100%" }}>{localStorage.getItem("email")} </p>
                   <Tooltip title="Open settings">
                     <IconButton  onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                       <Avatar

@@ -17,6 +17,8 @@ import dayjs, { Dayjs } from "dayjs";
 import CheckboxesTags from "./post/component/Checkboxes";
 import Typography from "@mui/material/Typography";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FaceRetouchingNaturalIcon from '@mui/icons-material/FaceRetouchingNatural';
 
 export default function IconLabelTabs() {
   const [CloseTime, setCloseTime] = useState<Dayjs | null>();
@@ -120,7 +122,7 @@ export default function IconLabelTabs() {
           </dd>
         </div>
         <Container maxWidth="md">
-          <Box sx={{ bgcolor: "#E0FFFF", padding: 1 }}>
+          <Box sx={{ bgcolor: "#CCCCFF", padding: 1 }}>
             <Tabs
               value={value}
               onChange={handleChange}
@@ -128,8 +130,8 @@ export default function IconLabelTabs() {
             >
               <Tab icon={<HomeIcon />} label="หน้าหลัก" />
               <Tab icon={<AddBusinessIcon />} label="สร้างโพสต์" />
-              <Tab icon={<AddBusinessIcon />} label="โพสต์ของฉัน" />
-              <Tab icon={<AddBusinessIcon />} label="โพสต์ที่สนใจ" />
+              <Tab icon={<FaceRetouchingNaturalIcon />} label="โพสต์ของฉัน" />
+              <Tab icon={<FavoriteIcon />} label="โพสต์ที่สนใจ" />
             </Tabs>
             {value === 0 && (
               <PostPage

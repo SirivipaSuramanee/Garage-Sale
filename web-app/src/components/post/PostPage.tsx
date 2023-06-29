@@ -102,7 +102,7 @@ export default function PostPage({value,filter,startDate,endDate}: props) {
   <div className="postPage">
   {post.length == 0 && 
   <>
-    <p className="is_no_post">no content</p>
+    <p  style={{ textAlign: "center", color: "#4E5180" }} className="is_no_post">ไม่มีโพสต์</p>
   </>
   }
   {
