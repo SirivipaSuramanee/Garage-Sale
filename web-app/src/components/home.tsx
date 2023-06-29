@@ -124,11 +124,11 @@ export default function IconLabelTabs() {
             <Tabs
               value={value}
               onChange={handleChange}
-              aria-label="icon label tabs example"
+              variant="fullWidth"
             >
               <Tab icon={<HomeIcon />} label="หน้าหลัก" />
               <Tab icon={<AddBusinessIcon />} label="สร้างโพสต์" />
-              <Tab icon={<AddBusinessIcon />} label="โฟสต์ของฉัน" />
+              <Tab icon={<AddBusinessIcon />} label="โพสต์ของฉัน" />
               <Tab icon={<AddBusinessIcon />} label="โพสต์ที่สนใจ" />
             </Tabs>
             {value === 0 && (

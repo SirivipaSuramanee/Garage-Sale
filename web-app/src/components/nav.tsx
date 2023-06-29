@@ -59,15 +59,6 @@ export default function Nav() {
     <CssBaseline />
       <AppBar color="primary" position="sticky">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            >
-            <MenuIcon />
-          </IconButton>
           <Stack
             direction="row"
             sx={{ flexGrow: 1 }}

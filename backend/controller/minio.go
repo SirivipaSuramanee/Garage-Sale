@@ -14,6 +14,7 @@ import (
 )
 
 func NewHandlerFunc(cgf *config.Config, pgDB *gorm.DB, minio *minio.Client) HandlerFunc {
+
 	return HandlerFunc{
 		cgf:   cgf,
 		pgDB:  pgDB,
@@ -74,7 +75,7 @@ func (h *HandlerFunc) UploadPictures() gin.HandlerFunc {
 				return
 			}
 		}
-
+		
 		ctx.JSON(http.StatusOK, gin.H{"data": imgUrl})
 	}
 }

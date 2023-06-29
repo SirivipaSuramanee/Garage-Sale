@@ -17,11 +17,12 @@ func SetupDatabase(cgf config.Config) *gorm.DB {
 		cgf.PgPort,
 		cgf.PgSSLMode,
 	)
-
+	fmt.Printf("dsn: %v\n", dsn)
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("Fail connect to database")
 	}
+
 	database.AutoMigrate(
 		&User{},
 		&Category{},

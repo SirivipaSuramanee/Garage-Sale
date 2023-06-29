@@ -12,8 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// hello world
-
 func main() {
 
 	cgf := config.LoadConFig(".")
@@ -25,6 +23,7 @@ func main() {
 		log.Fatalln(err)
 	}
 	h := controller.NewHandlerFunc(&cgf, db, minioClient)
+
 	r := gin.Default()
 
 	r.Use(middleware.CORSMiddleware())
