@@ -9,7 +9,7 @@ import meLocation from "../../assert/placeholder.png"
 import React, { useEffect, useState, useCallback } from "react";
 import { PostAllInterface } from "../../models/IPost";
 import { useNavigate } from 'react-router-dom';
-import TemporaryDrawer from "../drawer";
+import TemporaryDrawer from "./fillterMap";
 const apikey = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
 
 type MapLocationProps = {

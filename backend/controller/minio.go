@@ -41,7 +41,7 @@ func (h *HandlerFunc) UploadPicture() gin.HandlerFunc {
 
 		fileName := time.Now().Format("01-02-2006-15:04") + img.Filename
 
-		result, err := UploadPictureRopository(h.minio, ctx, contentType, file, h.cgf.StorageBucketName, fileName)
+		result, err := UploadPictureToMiniO(h.minio, ctx, contentType, file, h.cgf.StorageBucketName, fileName)
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, err)
@@ -58,9 +58,9 @@ func (h *HandlerFunc) UploadPictures() gin.HandlerFunc {
 		lenStr := ctx.Query("len")
 		len, err := strconv.Atoi(lenStr)
 		userId, _ := ctx.Get("userId")
-		var imgUrl []string
+		var imgUrl []string // เก็บ url ของรูป ที่ miniO ส่งกลับมา
 		for i := 0; i < len; i++ {
-			img, _ := ctx.FormFile(fmt.Sprintf("img%d", i+1))
+			img, _ := ctx.FormFile(fmt.Sprintf("img%d", i+1)) // ดึงรูปออกมาจาก fromdata ex img1
 			if err != nil {
 				ctx.JSON(http.StatusBadRequest, err.Error())
 				return
@@ -68,19 +68,21 @@ func (h *HandlerFunc) UploadPictures() gin.HandlerFunc {
 			file, _ := img.Open()
 			contentType := img.Header.Get("Content-Type")
 			fileName := fmt.Sprintf("img%d-%s-%s-%v", i+1, time.Now().GoString(), img.Filename, userId)
-			result, err := UploadPictureRopository(h.minio, ctx, contentType, file, h.cgf.StorageBucketName, fileName)
-			imgUrl = append(imgUrl, result.Location)
+			result, err := UploadPictureToMiniO(h.minio, ctx, contentType, file, h.cgf.StorageBucketName, fileName)
+			// UploadPictureToMiniO การเอารูปไปเก็บไว้ที่ miniO
 			if err != nil {
 				ctx.JSON(http.StatusBadRequest, err)
 				return
 			}
+			// result.Location = url ของรูป
+			imgUrl = append(imgUrl, result.Location)
 		}
-		
+		// ส่ง url ของรูปทั้งหมด ที่เก็บอยู่ใน imgUrl กลับไปให้
 		ctx.JSON(http.StatusOK, gin.H{"data": imgUrl})
 	}
 }
 
-func UploadPictureRopository(minioClient *minio.Client, ctx *gin.Context, contentType string, file multipart.File, BucketName string, Filename string) (minioResult minio.UploadInfo, err error) {
+func UploadPictureToMiniO(minioClient *minio.Client, ctx *gin.Context, contentType string, file multipart.File, BucketName string, Filename string) (minioResult minio.UploadInfo, err error) {
 	userMetaData := map[string]string{"x-amz-acl": "public-read"}
 
 	return minioClient.PutObject(ctx.Request.Context(),

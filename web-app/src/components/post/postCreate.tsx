@@ -88,8 +88,9 @@ function PostCreate() {
   };
 
   function submit() {
-    const formData = new FormData();
+   
     if (post.Picture) {
+      const formData = new FormData();
       post.Picture.forEach((value,index)=> {
         formData.append(`img${index+1}`, value);
       }) 
@@ -113,6 +114,9 @@ function PostCreate() {
           }
 
         });
+    }else {
+      setError(true);
+      setErrorMessage("กรุณาอัพโหลดรูปภาพสินค้า");
     }
   }
   const requestOptions = {
@@ -233,7 +237,7 @@ function PostCreate() {
         onClose={handleClose}
       >
         <Alert onClose={handleClose} severity="error">
-          Failure !!!: {errorMessage}
+          Failure: {errorMessage}
         </Alert>
       </Snackbar>
 

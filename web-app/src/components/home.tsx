@@ -8,7 +8,6 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import HomeIcon from "@mui/icons-material/Home";
 import PostCreate from "./post/postCreate";
-import Category from "./category";
 import { CategoryInterface } from "../models/ICategory";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -27,7 +26,7 @@ export default function IconLabelTabs() {
   const [token, setToken] = useState<String | null>(null);
   const [category, setCategory] = useState<CategoryInterface[]>([]);
   const [categoryFilter, setCategoryFilter] = useState<CategoryInterface[]>([]);
-  const [showAll, setShowAll] = useState(true);
+
 
   const getToken = () => {
     const token = localStorage.getItem("token");
@@ -47,7 +46,6 @@ export default function IconLabelTabs() {
 
     fetch(apiUrl, requestOptions)
       .then((response) => response.json())
-
       .then((res) => {
         if (res.data) {
           setCategory(res.data);
@@ -72,7 +70,7 @@ export default function IconLabelTabs() {
       <div>
         <div
           className="filterBar"
-          style={{ visibility: value == 3 ? "hidden" : "visible" }}
+          style={{ visibility: value == 0 ? "visible" : "hidden" }}
         >
           <Typography component="h1" variant="h6" color="primary" gutterBottom>
             หมวดหมู่
@@ -144,7 +142,6 @@ export default function IconLabelTabs() {
             {value === 1 && <PostCreate />}
             {value === 2 && (
               <PostPage
-                filter={categoryFilter.map((v) => v.name)}
                 value={value}
               />
             )}
@@ -158,7 +155,6 @@ export default function IconLabelTabs() {
     <>
       <div
         className="filterBar"
-        style={{ visibility: value == 3 ? "hidden" : "visible" }}
       >
         <Typography component="h1" variant="h6" color="primary" gutterBottom>
           หมวดหมู่
@@ -209,18 +205,11 @@ export default function IconLabelTabs() {
       </div>
       <Container maxWidth="md">
         <Box sx={{ bgcolor: "#E0FFFF", padding: 1 }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="icon label tabs example"
-          >
-            <Tab icon={<HomeIcon />} label="หน้าหลัก" />
-          </Tabs>
           <PostPage
             startDate={OpenTime}
             endDate={CloseTime}
             filter={categoryFilter.map((v) => v.name)}
-            value={value}
+            value={0}
           />
         </Box>
       </Container>

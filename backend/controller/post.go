@@ -32,15 +32,15 @@ func (h *HandlerFunc) CreatePost() gin.HandlerFunc {
 			Lat:          post.Lat,
 			Lng:          post.Lng,
 		}
-
+		// สร้างข็อมูล ตาราง post
 		if err := h.pgDB.Create(&CP).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-
-		for _, i := range post.Picture {
+		// สร้างข็อมูล ตาราง img
+		for _, picture := range post.Picture {
 			img := entity.Img{
-				Url:  i,
+				Url:  picture,
 				Post: CP,
 			}
 			if err := h.pgDB.Create(&img).Error; err != nil {
@@ -48,7 +48,7 @@ func (h *HandlerFunc) CreatePost() gin.HandlerFunc {
 				return
 			}
 		}
-
+		// สร้างข็อมูล ตาราง MapPostCategory
 		for _, i := range post.Category {
 			var category entity.Category
 			if tx := h.pgDB.Where("id = ?", i.ID).First(&category); tx.RowsAffected == 0 {
@@ -86,7 +86,7 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 
 		var filterDate string
 		if endDate != "" && startDate != "" {
-			filterDate = fmt.Sprintf("Date(day_time_open) >= '%s' and '%s' <= Date(day_time_close)", startDate, endDate)
+			filterDate = fmt.Sprintf("Date(day_time_open) >= '%s' or '%s' <= Date(day_time_close)", startDate, endDate)
 		} else if startDate != "" {
 			filterDate = fmt.Sprintf("day_time_open >= '%s'", startDate)
 		}

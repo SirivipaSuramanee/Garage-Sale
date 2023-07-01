@@ -195,10 +195,12 @@
 }
 
 .filterBar{
-  padding: 50px;
   display: block;
+  min-width: 200px;
+  max-width: 400px;
+  width: 20vw;
+  margin: 15px;
   position: absolute;
-  overflow: hidden;
 }
 
 .mapAllPost{
