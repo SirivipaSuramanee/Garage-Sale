@@ -243,7 +243,7 @@ export function Post({ Data, isOwn, backButton }: props) {
           <Typography variant="body2">
             หมวดหมู่:{" "}
             {Data.category.map((item: CategoryInterface) => (
-              <span className="tag">{item.name}</span>
+              <span style={{ textAlign: "center", background: "#728FCE" }} className="tag">{item.name}</span>
             ))}
           </Typography>
           <br />
