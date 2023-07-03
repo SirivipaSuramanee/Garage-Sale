@@ -15,9 +15,9 @@ func (h *HandlerFunc) Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	//เข้ารหัส password เช้าเราใส่มา 12345678 ใน database จะถูกเก็บ smdkfmkngkafgnvawrjgnfmk
 	password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
-
+	// สร้างข้อมูลสำหรับการลงทะเบียน
 	us := entity.User{
 		FirstName:  user.FirstName,
 		LastName:   user.LastName,
@@ -27,6 +27,7 @@ func (h *HandlerFunc) Register(c *gin.Context) {
 		Password:   string(password),
 		ProfileURL: user.ProfileURL,
 	}
+	// insert ข้อมูลลง postgres
 	if err := h.pgDB.Create(&us).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
