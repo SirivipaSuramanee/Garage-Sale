@@ -99,13 +99,13 @@ export default function MapLocation({ onViewPost } : MapLocationProps) {
     useEffect(() => {
         //ทำงานทุกครั้งที่เรารีเฟชหน้าจอ
         //ไม่ให้รันแบบอินฟินิตี้ลูป
+        getPosition();
         var Token = window.localStorage.getItem("token")
         if (Token) {
           GetAllPost("notMe");
         } else {
           GetAllPost("all");
         }
-          getPosition();
       }, []);
 
       useEffect(() => {

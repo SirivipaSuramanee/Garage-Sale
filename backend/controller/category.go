@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ค้นหา Category ทั้งหมดที่มีใน database
 func (h *HandlerFunc) GetAllCategory(c *gin.Context) {
 
 	var category []entity.Category
