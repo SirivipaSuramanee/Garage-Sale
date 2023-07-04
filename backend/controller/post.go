@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/SirivipaSuramanee/entity"
 	"github.com/gin-gonic/gin"
@@ -88,7 +89,13 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 		if endDate != "" && startDate != "" {
 			filterDate = fmt.Sprintf("Date('%s') BETWEEN Date(day_time_open) and Date(day_time_close) or Date('%s') BETWEEN Date(day_time_open) and Date(day_time_close)", startDate, endDate)
 		} else if startDate != "" {
-			filterDate = fmt.Sprintf("Date('%s') BETWEEN Date(day_time_open) and Date(day_time_close)", startDate)
+			now := time.Now()
+			date, _ := time.Parse("2006-01-02T15:04:05Z07:00", startDate)
+			if now.Format("2006-01-02") == date.Format("2006-01-02") {
+				filterDate = fmt.Sprintf("Date('%s') <= Date(day_time_open)", startDate)
+			} else {
+				filterDate = fmt.Sprintf("Date('%s') = Date(day_time_open)", startDate)
+			}
 		}
 		fmt.Printf("filterDate: %v\n", filterDate)
 		if ok {
