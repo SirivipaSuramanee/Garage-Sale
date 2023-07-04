@@ -86,10 +86,11 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 
 		var filterDate string
 		if endDate != "" && startDate != "" {
-			filterDate = fmt.Sprintf("Date(day_time_open) >= '%s' or '%s' <= Date(day_time_close)", startDate, endDate)
+			filterDate = fmt.Sprintf("Date('%s') BETWEEN Date(day_time_open) and Date(day_time_close) or Date('%s') BETWEEN Date(day_time_open) and Date(day_time_close)", startDate, endDate)
 		} else if startDate != "" {
-			filterDate = fmt.Sprintf("day_time_open >= '%s'", startDate)
+			filterDate = fmt.Sprintf("Date('%s') BETWEEN Date(day_time_open) and Date(day_time_close) ", startDate)
 		}
+		fmt.Printf("filterDate: %v\n", filterDate)
 		if ok {
 			if condition == "all" {
 				if err := h.pgDB.Model(&entity.Post{}).Where(filterDate).Preload("User").Find(&posts).Error; err != nil {

@@ -52,7 +52,7 @@ export default function MapLocation({ onViewPost } : MapLocationProps) {
 
     const GetAllPost = async (condition: string) => {
 
-    var start_date = startDate?.startOf("day").toISOString();
+    var start_date = startDate?.endOf("day").toISOString();
     var end_date = endDate?.endOf("day").toISOString()
     const apiUrl = `http://localhost:8080/post?condition=${condition}&startDate=${start_date ?? ""}&endDate=${end_date ?? ""}`;
         const requestOptions = {
