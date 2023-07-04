@@ -258,21 +258,23 @@ func (h *HandlerFunc) CreateMapPostFavorite() gin.HandlerFunc {
 
 }
 
+// delete โพสที่ถูกใจ unlike
 func (h *HandlerFunc) DeleteLikeMapPostFavorite() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var request entity.MapPostFavoriteRequest
 		var mpf entity.MapPostFavorite
-		userId, ok := c.Get("userId")
+		userId, ok := c.Get("userId") // รับ userId มาจาก token
 
-		if !ok {
+		if !ok { // ถ้าไม่เจอก็แจ้ง error
 			c.JSON(http.StatusBadRequest, gin.H{"error": "can't get userId"})
 			return
 		}
+		// merge request body เข้้ากับ request
 		if err := c.BindJSON(&request); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-
+		// ลบโพสต์ที่เราถูกใจด้วย user_id แลพ post_id
 		if err := h.pgDB.Where("post_id = ? and user_id = ?", request.PostID, userId).Delete(&mpf).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -282,34 +284,37 @@ func (h *HandlerFunc) DeleteLikeMapPostFavorite() gin.HandlerFunc {
 
 }
 
+// อัพเดทโพสต์
 func (h *HandlerFunc) UpdatePost() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		var req entity.PostRequest
 		var post entity.Post
-
+		// merge ค่าจาก body ที่รับเข้ามา  เข้ากับ req
 		if err := c.BindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+		// ค้นหาโพสต์ ด้วย id
 		if tx := h.pgDB.Where("id = ?", req.ID).First(&post); tx.RowsAffected == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "post not found"})
 			return
 		}
+		// update ค่าต่างๆ ที่เราจะอัพเดท
 		post.Topic = req.Topic
 		post.Detail = req.Detail
 		post.Lat = req.Lat
 		post.Lng = req.Lng
 		post.DayTimeOpen = req.DayTimeOpen
 		post.DayTimeClose = req.DayTimeClose
-
+		// update ลง database
 		h.pgDB.Save(&post)
-
+		// ลบการ map กับ category ทิ้งเพื่อ ทำการ inset ใหม่
 		if err := h.pgDB.Where("post_id = ?", post.ID).Delete(&entity.MapPostCategory{}).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-
+		// insert Category category ใหม่เข้า post
 		for _, i := range req.Category {
 			var category entity.Category
 			if tx := h.pgDB.Where("id = ?", i.ID).First(&category); tx.RowsAffected == 0 {
@@ -327,13 +332,14 @@ func (h *HandlerFunc) UpdatePost() gin.HandlerFunc {
 				return
 			}
 		}
-
+		// ถ้ามีรูปส่งมาอัทเดท
 		if req.Picture != nil {
+			// ลบรูปเก่าออกจาก database
 			if err := h.pgDB.Where("post_id = ?", post.ID).Delete(&entity.Img{}).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 				return
 			}
-
+			// นำรูปใหม่ใส่ database
 			for _, i := range req.Picture {
 				img := entity.Img{
 					Url:  i,
@@ -350,26 +356,29 @@ func (h *HandlerFunc) UpdatePost() gin.HandlerFunc {
 	}
 }
 
+// ลบโฟสต์
 func (h *HandlerFunc) DeletePost() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
+		// รับ id มาจาก param
 		id := c.Param("id")
-
+		// ลบรูปที่เกี๋ยวข้องกับโพสด้วย id
 		if err := h.pgDB.Where("post_id = ?", id).Delete(&entity.Img{}).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-
+		// ลบ การ map category ที่ตาราง MapPostCategory
 		if err := h.pgDB.Where("post_id = ?", id).Delete(&entity.MapPostCategory{}).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
+		// ลบการ map Favorite ของหรือลบโพสที่ชอบออกเนื่องจากไม่มีโพสนี้แล้วจิงต้ิงลบทิ้ง
 		if err := h.pgDB.Where("post_id = ?", id).Delete(&entity.MapPostFavorite{}).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-
+		// ลบโพสต์ ตาราง post ทิ้ง ด้วย id
 		if err := h.pgDB.Where("id = ?", id).Delete(&entity.Post{}).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
