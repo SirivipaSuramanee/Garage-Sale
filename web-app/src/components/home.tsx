@@ -204,7 +204,7 @@ export default function IconLabelTabs() {
         </dd>
       </div>
       <Container maxWidth="md">
-        <Box sx={{ bgcolor: "#E0FFFF", padding: 1 }}>
+        <Box sx={{ bgcolor: "#DBE9FA", padding: 1 }}>
           <PostPage
             startDate={OpenTime}
             endDate={CloseTime}

@@ -36,7 +36,7 @@ function PostCreate() {
   const [success, setSuccess] = useState(false); //จะยังไม่ให้แสดงบันทึกข้อมูล
   const [error, setError] = useState(false);
   const [OpenTime, setOpenTime] = useState<Dayjs | null>(dayjs(new Date()));
-  const [CloseTime, setCloseTime] = useState<Dayjs | null>(dayjs());
+  const [CloseTime, setCloseTime] = useState<Dayjs | null>();
   const [errorMessage, setErrorMessage] = useState("");
   const [onPinMap, setOnPinMap] = useState(false);
 
