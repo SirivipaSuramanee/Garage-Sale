@@ -110,7 +110,7 @@ func (h *HandlerFunc) GetAllPost() gin.HandlerFunc {
 					return
 				}
 			} else if condition == "notMe" {
-				if err := h.pgDB.Model(&entity.Post{}).Where("user_id != ?", userId).Preload("User").Find(&posts).Error; err != nil {
+				if err := h.pgDB.Model(&entity.Post{}).Where(filterDate).Where("user_id != ?", userId).Preload("User").Find(&posts).Error; err != nil {
 					c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 					return
 				}
