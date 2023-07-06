@@ -32,6 +32,7 @@ type props = {
 };
 export default function PersistentDrawerRight({ open, setOpen , filter, startDate, endDate}: props) {
   const theme = useTheme();
+  const [categoryf, setCategoryf] = useState<string[]>([]);
   const [CloseTime, setCloseTime] = useState<Dayjs | null>();
   const [OpenTime, setOpenTime] = useState<Dayjs | null>(dayjs(new Date()));
   const [category, setCategory] = useState<CategoryInterface[]>([]);
@@ -93,7 +94,7 @@ export default function PersistentDrawerRight({ open, setOpen , filter, startDat
           <CheckboxesTags
             Data={category}
             setCategory={(value) => {
-              filter(value.map((v) => v.name))
+              setCategoryf(value.map((v) => v.name))
             }}
           />
           <Typography component="h1" variant="h6" color="primary" gutterBottom>
@@ -109,7 +110,6 @@ export default function PersistentDrawerRight({ open, setOpen , filter, startDat
                     value={OpenTime}
                     onChange={(value) => {
                       setOpenTime(value);
-                      startDate(value);
                     }}
                   />
                 </DemoContainer>
@@ -124,12 +124,16 @@ export default function PersistentDrawerRight({ open, setOpen , filter, startDat
                     value={CloseTime}
                     onChange={(value) => {
                       setCloseTime(value);
-                      endDate(value);
                     }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
             </span>
+            <button onClick={() => {
+              filter(categoryf)
+              endDate(CloseTime);
+              startDate(OpenTime)
+            }}> ตกลง</button>
         </div>
       </Drawer>
     </Box>
